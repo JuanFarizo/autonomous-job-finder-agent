@@ -6,8 +6,8 @@ Only `max_age_days` is DECIDED. All other keys are a draft to be confirmed in Ph
 |---|---|---|---|
 | `max_age_days` | Maximum age of a posting | 7 | DECIDED (configurable) |
 | `sources` | Enabled sources | `[linkedin]` | DECIDED (LinkedIn first) |
-| `target_roles` | Titles/keywords to search | `["Java Web Developer"]` | DECIDED role (owner: Java Senior Web Developer); exact title list PENDING |
-| `location` | Rules object, see D21 | residence AR | DECIDED (onsite in Argentina still null) |
+| `target_roles` | Titles/keywords to search | `["Java Developer"]` | DECIDED (D23) |
+| `location` | Rules object, see D21 | residence AR | DECIDED (D21, D22) |
 | `seniority` | Accepted levels | semi-senior, senior | DECIDED (D20) |
 | `languages` | Accepted posting languages | es, en | DECIDED (D20) |
 | `exclude_keywords` | Postings to drop | none | PROPOSED |

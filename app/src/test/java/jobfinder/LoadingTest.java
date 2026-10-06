@@ -15,7 +15,7 @@ class LoadingTest {
         var c = JsonFiles.loadConfig(Path.of("../config/config.json"));
         assertEquals(7, c.maxAgeDays());
         assertEquals(java.util.List.of("linkedin"), c.sources());
-        assertNull(c.location().acceptOnsiteInResidence());
+        assertEquals(Boolean.TRUE, c.location().acceptOnsiteInResidence());
     }
 
     @Test

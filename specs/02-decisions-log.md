@@ -23,3 +23,6 @@
 | D19 | Java 25.0.4 (amzn) and Maven 3.9.10, pinned in `.sdkmanrc` | DECIDED | 2026-10-06 | Owner |
 | D20 | Seniority: semi-senior and senior. Posting languages: Spanish, English | DECIDED | 2026-10-06 | Owner (Q5) |
 | D21 | Location rule: accept located in Argentina, remote open to Argentina, or remote from anywhere. Reject remote restricted to other countries/regions (owner will not relocate) | DECIDED | 2026-10-06 | Owner (Q5). Onsite/hybrid in Argentina: not stated, kept null, asked again |
+| D22 | Accept onsite/hybrid in Argentina as well as remote | DECIDED | 2026-10-06 | Owner |
+| D23 | Target role title: "Java Developer" only | DECIDED | 2026-10-06 | Owner (Q5) |
+| D24 | Owner-stated facts recorded as proof points (Java 8 to 25, OAuth authorization-server lambda, English working level). Exclude keywords and min score: skipped for now | DECIDED | 2026-10-06 | Owner (Q11 path: grounded claims only) |
