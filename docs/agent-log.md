@@ -11,3 +11,5 @@
 No subagent violated a ground rule. No secrets in the repo.
 | A3 Phase 6 tracker | Subagent (worktree) | Re-ran mvn test (11 total, green), grepped for apply/submit code: none, only track dirs changed | Accepted and merged. First launch with harness worktree isolation failed (worktree built from initial commit); relaunched in manual worktrees |
 | A2 Phase 4 scorer | Subagent (worktree) | Re-ran mvn test (14 green), read prompt: attribution, grounding and untrusted-input rules present, MIT license copied | Accepted and merged. Placeholder DEFAULT_MIN_SCORE=3.5 is NOT an owner decision; needs confirmation. No live LLM call |
+| A1 Phase 3 filters | Subagent (worktree) | Re-ran full mvn test after merge, only filter dirs changed | Accepted and merged. Heuristics chosen by agent (language threshold, city list, ambiguous cases) flagged to owner |
+| Observability | Orchestrator | RunMetrics + tests | Added: search stats, result-field fill, funnel, LLM tokens (provider or estimated) |
