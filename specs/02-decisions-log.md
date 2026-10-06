@@ -26,3 +26,5 @@
 | D22 | Accept onsite/hybrid in Argentina as well as remote | DECIDED | 2026-10-06 | Owner |
 | D23 | Target role title: "Java Developer" only | DECIDED | 2026-10-06 | Owner (Q5) |
 | D24 | Owner-stated facts recorded as proof points (Java 8 to 25, OAuth authorization-server lambda, English working level). Exclude keywords and min score: skipped for now | DECIDED | 2026-10-06 | Owner (Q11 path: grounded claims only) |
+| D25 | Java-Python bridge: Java launches the sidecar as a subprocess, JSON on stdin, JSON on stdout (Q4) | DECIDED | 2026-10-06 | Owner accepted recommendation |
+| D26 | Search query: `Java AND (Developer OR Engineer) AND (Backend OR Web)` | DECIDED | 2026-10-06 | Owner. Whether LinkedIn honors the boolean operators is UNVERIFIED until a live run |

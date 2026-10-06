@@ -1,7 +1,7 @@
 {
   "max_age_days": 7,
   "sources": ["linkedin"],
-  "target_roles": ["Java Developer"],
+  "target_roles": ["Java AND (Developer OR Engineer) AND (Backend OR Web)"],
   "seniority": ["semi-senior", "senior"],
   "languages": ["es", "en"],
   "location": {

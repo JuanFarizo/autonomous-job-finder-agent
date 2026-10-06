@@ -1,0 +1,2 @@
+[{"id":"li-1","job_url":"https://example.test/1","title":"Senior Java Developer","company":"Acme","location":"Argentina","date_posted":"2026-10-05T00:00:00.000","job_type":"contract","job_level":"Mid-Senior level","is_remote":true,"description":"Java, Spring","extra":"ignored"},
+ {"id":"li-2","job_url":"https://example.test/2","title":"Java Engineer","company":"Beta","location":"Buenos Aires","date_posted":null,"job_type":null,"job_level":null,"is_remote":false,"description":null}]
