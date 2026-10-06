@@ -9,7 +9,7 @@
 | Evaluation prompts and grounding rule | Ported from career-ops (MIT) | PROPOSED | https://github.com/santifer/career-ops |
 | Company career-page scanner | career-ops scanner | PENDING | Optional later source; code not inspected |
 | CV PDF rendering | career-ops HTML+Playwright route, or a Java-side library | PENDING | Decide in Phase 5 |
-| Java app framework, LLM client, structured output | Spring Boot 4 + Spring AI 2.x | DECIDED (D15), validate in Phase 0 | Candidate fallback: `anthropic-java` |
+| Java app framework, LLM client, structured output | Spring Boot 4 + Spring AI 2.x | DECIDED (D15), validate in Phase 0 | Spring AI Ollama starter has no api-key property; documented route is OpenAI-compatible client against Ollama Cloud. Unverified live |
 | Java to Python bridge | Subprocess vs local service | PENDING | Decide in Phase 2 |
 | Indeed / Glassdoor | API or MCP | PENDING | Research in Phase 8 |
 

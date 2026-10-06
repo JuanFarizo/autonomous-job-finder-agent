@@ -15,7 +15,8 @@
 | D11 | Source interface defined from the start so new sources plug in later | PROPOSED | 2026-10-06 | See `04-architecture.md` |
 | D12 | Storage: plain JSON files; SQLite only if a database becomes mandatory | DECIDED | 2026-10-06 | Owner: keep it simple (Q8) |
 | D13 | Search intent: remote contractor roles, Java Senior Web Developer; from Argentina or fully remote | DECIDED | 2026-10-06 | Owner (Q5). Exact terms and locations detailed in Phase 1 from owner's LinkedIn profile |
-| D14 | Primary LLM provider: Anthropic Claude. Ollama (free tier) available as secondary | DECIDED | 2026-10-06 | Owner (Q3). Budget and exact model still open |
+| D14 | LLM provider: Ollama Cloud free tier via API key. Anthropic API is NOT available (owner has Claude Pro, which gives no API key) | DECIDED | 2026-10-06 | Owner (Q3). Supersedes first D14 (Claude primary). Claude API only if owner buys API credits later |
 | D15 | Java stack: Spring Boot 4 + Spring AI 2.x as LLM client and structured output | DECIDED | 2026-10-06 | Owner (Q2). Fit still validated in Phase 0 spike; fallback `anthropic-java` only if validation fails, with owner approval |
-| D16 | LLM models: Claude Sonnet 5.5 (primary); Ollama Cloud free tier (secondary). Budget cap not yet given | DECIDED | 2026-10-06 | Owner (Q3). Refines D14 |
+| D16 | Model: an Ollama Cloud free-tier / starter model, to be chosen by testing in Phase 0 | DECIDED (provider), PENDING (model) | 2026-10-06 | Supersedes Sonnet 5.5 choice. Ollama pricing page: free plan has starter models, starter credits not rolled over, 1 concurrent request |
 | D17 | Phase 0 spike runs from owner's own IP, no proxy, small result cap | DECIDED | 2026-10-06 | Owner: avoid proxies, keep it easy, avoid LinkedIn block |
+| D18 | career-ops port scope: trimmed (blocks A and B, 5-dimension score, E, plus grounding rule). Not the full 120 KB prompt | DECIDED | 2026-10-06 | Owner (Q1 follow-up). Attribution to career-ops (MIT) required; do not name product "career-ops" |
