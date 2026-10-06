@@ -1,0 +1,4 @@
+{"name":"Test","headline":"h","summary":"s",
+ "skills":[{"name":"Java","level":"senior","years":5,"proof_point_ids":["pp1"]}],
+ "experience":[{"company":"C","role":"R","from":"2021-03","to":null,"bullets":["b"]}],
+ "proof_points":[{"id":"pp1","claim":"Built X","source":"cv","confirmed":true}]}

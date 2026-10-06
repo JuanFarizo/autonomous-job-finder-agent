@@ -6,3 +6,9 @@ Call: python-jobspy 1.2.0, Python 3.12.11 venv. site=linkedin, term "Senior Java
 - is_remote was False for 15/15 although is_remote=True was passed. Remote filter is NOT reliable here; our own filter must decide remote (needs description or location text).
 - Contractor filter: JobSpy has job_type param but job_type column came back empty; not tested. Open.
 - Several results are generic Argentina onsite or hybrid roles (Globant, EPAM, etc.).
+
+## Correction (2026-10-06, after reading JobSpy 1.2.0 source)
+Earlier notes above were wrong or misleading:
+- Remote: `is_remote=True` DOES send LinkedIn's `f_WT=2` (remote) filter (linkedin/__init__.py line 94). The `is_remote` column is only a text heuristic on title/location (`is_job_remote`), so False in the output does not mean the filter failed. Whether the 15 results are truly remote is unverified.
+- job_type and job_level are parsed only from each job's detail page, which JobSpy fetches only when `linkedin_fetch_description=True`. Empty values were caused by my run settings, not a bug.
+- Contract filter exists: `job_type="contract"` sends `f_JT=C` (linkedin/util.py). Untested live.

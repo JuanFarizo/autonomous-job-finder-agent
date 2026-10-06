@@ -20,3 +20,6 @@
 | D16 | Model: an Ollama Cloud free-tier / starter model, to be chosen by testing in Phase 0 | DECIDED (provider), PENDING (model) | 2026-10-06 | Supersedes Sonnet 5.5 choice. Ollama pricing page: free plan has starter models, starter credits not rolled over, 1 concurrent request |
 | D17 | Phase 0 spike runs from owner's own IP, no proxy, small result cap | DECIDED | 2026-10-06 | Owner: avoid proxies, keep it easy, avoid LinkedIn block |
 | D18 | career-ops port scope: trimmed (blocks A and B, 5-dimension score, E, plus grounding rule). Not the full 120 KB prompt | DECIDED | 2026-10-06 | Owner (Q1 follow-up). Attribution to career-ops (MIT) required; do not name product "career-ops" |
+| D19 | Java 25.0.4 (amzn) and Maven 3.9.10, pinned in `.sdkmanrc` | DECIDED | 2026-10-06 | Owner |
+| D20 | Seniority: semi-senior and senior. Posting languages: Spanish, English | DECIDED | 2026-10-06 | Owner (Q5) |
+| D21 | Location rule: accept located in Argentina, remote open to Argentina, or remote from anywhere. Reject remote restricted to other countries/regions (owner will not relocate) | DECIDED | 2026-10-06 | Owner (Q5). Onsite/hybrid in Argentina: not stated, kept null, asked again |

@@ -1,0 +1,17 @@
+{
+  "max_age_days": 7,
+  "sources": ["linkedin"],
+  "target_roles": ["Java Web Developer"],
+  "seniority": ["semi-senior", "senior"],
+  "languages": ["es", "en"],
+  "location": {
+    "residence": "AR",
+    "accept_remote_worldwide": true,
+    "accept_remote_in_residence": true,
+    "reject_remote_restricted_to_other_regions": true,
+    "accept_onsite_in_residence": null
+  },
+  "exclude_keywords": [],
+  "min_score": null,
+  "results_per_search": null
+}
