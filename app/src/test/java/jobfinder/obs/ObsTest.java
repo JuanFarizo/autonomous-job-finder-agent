@@ -62,7 +62,7 @@ class ObsTest {
     @SuppressWarnings("unchecked")
     @Test
     void tokensUseProviderUsageOrEstimate() {
-        var profile = new Profile("n", "h", "s", List.of(), List.of(), List.of(new Profile.ProofPoint("pp1", "c", "cv", true)));
+        var profile = new Profile("n", "h", "s", List.of(), List.of(), List.of(new Profile.ProofPoint("pp1", "c", "cv", true)), null);
         var job = new Job("linkedin", "1", "u", "t", "c", "l", null, null, null, null, "d");
         String ok = "{\"score\":4,\"dimensions\":{\"cvMatch\":4,\"northStar\":4,\"comp\":4,\"culture\":4,\"redFlags\":4},\"reason\":\"r\",\"evidence\":[\"pp1\"]}";
         var metrics = new RunMetrics();

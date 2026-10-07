@@ -9,7 +9,8 @@ public record Profile(
         String summary,
         List<Skill> skills,
         List<Experience> experience,
-        List<ProofPoint> proofPoints) {
+        List<ProofPoint> proofPoints,
+        List<String> contact) {
 
     public record Skill(String name, String level, Integer years, List<String> proofPointIds) {}
 

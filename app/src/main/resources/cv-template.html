@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  @page { size: A4; margin: 16mm 15mm; }
+  body { font-family: Helvetica, Arial, sans-serif; font-size: 10pt; color: #1a1a1a; line-height: 1.35; }
+  h1 { font-size: 20pt; margin: 0; }
+  .headline { font-size: 11pt; color: #444; margin: 2pt 0 2pt 0; }
+  .contact { font-size: 9pt; color: #555; margin-bottom: 8pt; }
+  h2 { font-size: 11pt; border-bottom: 1px solid #999; margin: 12pt 0 4pt 0; padding-bottom: 1pt; text-transform: uppercase; letter-spacing: 0.5pt; }
+  .job { margin-bottom: 7pt; }
+  .jobhead { font-weight: bold; }
+  .dates { color: #555; font-weight: normal; }
+  ul { margin: 2pt 0 0 0; padding-left: 14pt; }
+  li { margin-bottom: 1.5pt; }
+  .skills { margin: 0; }
+</style>
+</head>
+<body>
+  <h1>{{name}}</h1>
+  <div class="headline">{{headline}}</div>
+  <div class="contact">{{contact}}</div>
+  <h2>Summary</h2>
+  <p>{{summary}}</p>
+  {{highlights}}
+  <h2>Skills</h2>
+  <p class="skills">{{skills}}</p>
+  <h2>Experience</h2>
+  {{experience}}
+</body>
+</html>

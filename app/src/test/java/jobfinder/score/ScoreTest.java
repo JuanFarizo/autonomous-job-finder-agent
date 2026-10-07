@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 class ScoreTest {
 
     static final Profile PROFILE = new Profile("Ana", "Java dev", "Senior Java", List.of(), List.of(),
-            List.of(new Profile.ProofPoint("pp1", "Built X", "cv", true)));
+            List.of(new Profile.ProofPoint("pp1", "Built X", "cv", true)), null);
 
     static Job job(String id, LocalDate d, String desc) {
         return new Job("linkedin", id, "u" + id, "Java Dev", "Co", "Remote", d, true, null, null, desc);
