@@ -28,3 +28,9 @@ No. LinkedIn's terms generally prohibit automated scraping (general knowledge). 
 
 ## Recommendation
 Do not buy a proxy now. Run by hand from your own IP. The run metrics (`data/runs/`) record every failed search with its error text, so a 429 will be visible. Add a proxy only if blocks become frequent.
+
+## Cost update (web search, 2026-10-07; provider pages not opened, prices change)
+- Free proxies: exist, but public lists are already blocked or abused, can read or alter your traffic, and drop offline. Not recommended for LinkedIn.
+- Residential proxies are a paid service, no infrastructure. Reported pay-as-you-go prices: about $1 to $15 per GB. Examples quoted by search results: DataImpulse $1/GB (5 GB first purchase minimum), Databay $2.75/GB (1-5 GB, data kept 186 days), Bright Data about $4/GB promotional (no minimum).
+- Subscription is not mandatory with pay-as-you-go providers. Check minimum top-up, VAT and whether purchased data expires.
+- Our usage estimate (assumption, not measured): about 25 requests per run at roughly 50-200 KB each is under 5 MB, so a few GB would last months. The minimum purchase, not usage, is the real cost.
