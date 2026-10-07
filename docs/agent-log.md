@@ -15,3 +15,4 @@ No subagent violated a ground rule. No secrets in the repo.
 | Observability | Orchestrator | RunMetrics + tests | Added: search stats, result-field fill, funnel, LLM tokens (provider or estimated) |
 | Phase 5 tailoring + PDF | Orchestrator | Real PDF rendered from real profile, text extracted back (2 pages); grounding tests | Done. openhtmltopdf validated by running |
 | Pipeline, Ollama adapter, retry | Orchestrator | 55 tests green; app starts with Spring AI context | Done with fakes. Live LinkedIn and LLM calls NOT run (owner: continue without live tests) |
+| First live run | Owner ran it; orchestrator read data/ | Read run JSON, raw files and shortlist | Pipeline works live. Findings: remote filter had no effect, searches identical, scores lenient, no remote/contractor preference in the scoring prompt |

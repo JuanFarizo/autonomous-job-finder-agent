@@ -37,3 +37,12 @@
 
 ## Left out by default
 - `stickerdaniel/linkedin-mcp-server`: uses the owner's logged-in LinkedIn session via browser automation. Partially verified (third-party listings and CI badges; repo not opened directly). See D10.
+
+## First live pipeline run (owner ran it 2026-10-07; results read by orchestrator from data/)
+- Works end to end: 2 LinkedIn searches, 20 rows, 0 errors, no block. Detail fetch filled description, date and job_type for 10/10 rows. Boolean query `Java AND (Developer OR Engineer) AND (Backend OR Web)` returned relevant Java backend jobs (whether LinkedIn honors the operators is still not proven).
+- The remote search (`is_remote=True`) and the non-remote search returned the SAME 10 jobs (overlap 10/10). Every row had `is_remote=False`. Observed: the remote filter had no visible effect. Cause unknown; needs an experiment.
+- All rows were `fulltime`. The contract filter (`job_type=contract`) was not used yet.
+- Hard filters dropped 10 of 20, all of them cross-search duplicates. No junior or stale job appeared in this sample, so those filters are untested on real data.
+- Scoring: 10 calls, 0 parse failures, 19,651 input and 1,806 output tokens (provider-reported), about 1 to 3 s per call. Scores 3.7 to 4.7: the model is lenient, so `min_score` 3.5 filters nothing.
+- Hybrid onsite jobs rank high because the prompt has no remote or contractor preference.
+- Cosmetic: a Netty DNS warning on macOS (`MacOSDnsServerAddressStreamProvider`), harmless.
