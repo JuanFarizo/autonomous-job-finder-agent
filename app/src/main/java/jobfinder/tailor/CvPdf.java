@@ -55,14 +55,23 @@ public final class CvPdf {
         return sb.append("</ul>").toString();
     }
 
+    // CHANGED: two-line job head. Line 1 = role (bold, left) | dates (right) in a two-cell table.
+    // Line 2 = company (italic). Text values are unchanged; only markup and separators differ.
     private static String experience(List<Profile.Experience> es) {
         var sb = new StringBuilder();
         for (var e : es) {
-            sb.append("<div class=\"job\"><div class=\"jobhead\">").append(esc(e.role())).append(", ").append(esc(e.company()))
-              .append(" <span class=\"dates\">(").append(esc(e.from())).append(" - ").append(e.to() == null ? "present" : esc(e.to()))
-              .append(")</span></div><ul>");
-            for (String b : e.bullets()) sb.append("<li>").append(esc(b)).append("</li>");
-            sb.append("</ul></div>");
+            sb.append("<div class=\"job\"><table class=\"jobhead\"><tr>")
+              .append("<td class=\"role\">").append(esc(e.role())).append("</td>")
+              .append("<td class=\"dates\">").append(esc(e.from())).append(" \u2013 ")
+              .append(e.to() == null ? "present" : esc(e.to())).append("</td>")
+              .append("</tr></table>")
+              .append("<p class=\"company\">").append(esc(e.company())).append("</p>");
+            if (!e.bullets().isEmpty()) {
+                sb.append("<ul>");
+                for (String b : e.bullets()) sb.append("<li>").append(esc(b)).append("</li>");
+                sb.append("</ul>");
+            }
+            sb.append("</div>");
         }
         return sb.toString();
     }

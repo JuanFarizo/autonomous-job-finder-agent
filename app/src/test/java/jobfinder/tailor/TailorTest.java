@@ -52,6 +52,18 @@ class TailorTest {
         assertThrows(IllegalStateException.class, () -> Grounding.verify(badSummary, PROFILE));
     }
 
+    /** Renders fake data to target/cv-sample.pdf (gitignored) so the layout can be checked by eye. */
+    @Test
+    void rendersSamplePdfForVisualCheck() throws Exception {
+        var bullets = List.of("Built Java services at scale", "Built React tools", "Implemented an OAuth authorization server lambda");
+        var jobs = new java.util.ArrayList<Profile.Experience>();
+        for (int i = 0; i < 5; i++) jobs.add(new Profile.Experience("Company " + i, "Senior Backend Engineer " + i, "20" + (10 + i) + "-01", i == 0 ? null : "20" + (11 + i) + "-06", bullets));
+        var profile = new Profile("Ana Perez", "Java Developer", "Backend dev with fake data", PROFILE.skills(), jobs, PROFILE.proofPoints(), PROFILE.contact());
+        var cv = Tailorer.tailor(job("Java OAuth React"), profile);
+        Path pdf = CvPdf.write(cv, profile, Path.of("target", "cv-sample.pdf"));
+        assertTrue(Files.size(pdf) > 1000);
+    }
+
     @Test
     void writesRealPdfWithEscapedTextAndRefusesUngroundedCv() throws Exception {
         var cv = Tailorer.tailor(job("Java OAuth"), PROFILE);
