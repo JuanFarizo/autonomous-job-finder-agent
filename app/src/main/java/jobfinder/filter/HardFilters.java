@@ -39,8 +39,9 @@ import java.util.regex.Pattern;
  *     Onsite in Argentina follows location.acceptOnsiteInResidence (null: kept with a warning).</li>
  * <li><b>Seniority</b>: title/jobLevel whole words junior, jr, trainee, intern, internship, entry level are
  *     rejected, unless config.seniority lists "junior". Titles that also say senior/semi-senior/ssr are kept
- *     with a warning. lead, principal, staff, manager, head, director are never decided: kept with warning
- *     "seniority-question" (unless config.seniority lists the word).</li>
+ *     with a warning. manager, head, director are never decided: kept with warning
+ *     "seniority-question" (unless config.seniority lists the word). lead, principal, staff are rejected (D31)
+ *     unless config.seniority lists the word.</li>
  * <li><b>Exclude keywords</b>: case-insensitive, whole-word (not preceded/followed by a letter or digit),
  *     searched in title and description.</li>
  * <li><b>Language</b>: stopword counts over the description for en, es, pt, fr, de, it. Rejected only when
@@ -77,7 +78,9 @@ public final class HardFilters {
     private static final Pattern SENIOR = Pattern.compile(
             "(?<![a-z0-9])(senior|sr|semi[\\s-]?senior|ssr)(?![a-z0-9])");
     private static final Pattern LEAD = Pattern.compile(
-            "(?<![a-z0-9])(lead|principal|staff|manager|head|director)(?![a-z0-9])");
+            "(?<![a-z0-9])(manager|head|director)(?![a-z0-9])");
+    private static final Pattern TOO_SENIOR = Pattern.compile(
+            "(?<![a-z0-9])(lead|principal|staff)(?![a-z0-9])");
 
     public static FilterResult apply(List<Job> jobs, AppConfig config, LocalDate today) {
         List<Job> kept = new ArrayList<>();
@@ -194,6 +197,8 @@ public final class HardFilters {
                 return "seniority:" + jm.group(1).replaceAll("[\\s-]+", " ");
             }
         }
+        Matcher tm = TOO_SENIOR.matcher(text);
+        if (tm.find() && wanted.stream().noneMatch(s -> s.contains(tm.group(1)))) return "seniority:" + tm.group(1);
         Matcher lm = LEAD.matcher(text);
         if (lm.find() && wanted.stream().noneMatch(s -> s.contains(lm.group(1)))) {
             w.add("seniority-question (\"" + lm.group(1) + "\" role: owner to decide)");

@@ -155,8 +155,13 @@ class HardFiltersTest {
                 ok("Semi Senior Java Developer", "Argentina", false)).kept().size());
     }
 
-    @Test void leadKeptWithQuestionWarning() {
-        for (String t : List.of("Tech Lead Java", "Principal Engineer", "Staff Engineer", "Engineering Manager", "Head of Java")) {
+    @Test void leadPrincipalStaffRejectedManagerHeadKeptWithWarning() {
+        for (String t : List.of("Tech Lead Java", "Principal Engineer", "Staff Engineer")) {
+            FilterResult r = run(cfg(), ok(t, "Argentina", false));
+            assertEquals(1, r.rejected().size(), t);
+            assertTrue(r.rejected().get(0).reason().startsWith("seniority:"), t);
+        }
+        for (String t : List.of("Engineering Manager", "Head of Java")) {
             FilterResult r = run(cfg(), ok(t, "Argentina", false));
             assertEquals(1, r.kept().size(), t);
             assertTrue(r.warnings().get(0).startsWith("seniority-question"), t);

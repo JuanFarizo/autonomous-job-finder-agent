@@ -32,3 +32,5 @@
 | D28 | Tailoring is deterministic: selects and orders the owner's own skills, proof points and bullets by overlap with the job; no rewriting. `Grounding.verify` rejects any text not in the profile, and the PDF is not written if it fails | DECIDED | 2026-10-07 | Implements C8. LLM rewording deferred; would need the same grounding check |
 | D29 | Pipeline order: collect, hard filters, skip already tracked, score, rank, track, tailor top 5 PDFs, shortlist. Descriptions are fetched (needed for filters and scoring) | DECIDED | 2026-10-07 | Implemented in `jobfinder.pipeline.Pipeline`; tested with fakes only, no live run |
 | D30 | Safe failure: failed searches are skipped and logged; if all fail the run stops. Sidecar calls retry with exponential backoff (2 attempts, 5 s base) | DECIDED | 2026-10-07 | Phase 7 partial. Scheduling and proxy still open (Q9, Q6) |
+| D31 | Reject titles with lead, principal or staff (unless listed in `seniority`). Manager, head and director are kept with a warning | DECIDED | 2026-10-07 | Owner: does not want those roles for now |
+| D32 | The agent is run by hand, no scheduler for now (Q9) | DECIDED | 2026-10-07 | Owner |
