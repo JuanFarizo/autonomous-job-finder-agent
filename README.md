@@ -2,11 +2,15 @@
 Subject: An intelligent, automated software application designed to streamline the job hunt by scraping postings, filtering by custom criteria, and dynamically adapting to different application workflows.
 
 ## Run (discovery only: the agent never applies to jobs)
-Run it by hand from `app/`. There is no scheduler.
+Run it by hand. There is no scheduler.
 ```
-cd app
-mvn test                                                     # unit tests, no network, no keys needed
-mvn spring-boot:run -Dspring-boot.run.arguments=run          # full run: LinkedIn, filter, score, CV PDFs, shortlist
+./scripts/run.sh                                            # works from any terminal: loads sdkman Java/Maven and the keys
+cd app && mvn test                                          # unit tests, no network, no keys needed
+```
+Exported variables exist only in the terminal where you typed them. Put them once in `private/env.sh` (gitignored) so `scripts/run.sh` always finds them:
+```
+export OLLAMA_API_KEY=...
+export OLLAMA_MODEL=gemma4:31b
 ```
 Output goes to `data/` (gitignored): `shortlist_<date>.md`, `cv/*.pdf`, `raw/`, `runs/run_*.json` (searches, LinkedIn result quality, funnel, token usage).
 

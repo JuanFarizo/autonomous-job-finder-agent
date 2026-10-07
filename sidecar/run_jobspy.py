@@ -17,7 +17,7 @@ def main() -> int:
             job_type=q.get("job_type"),
             results_wanted=q.get("results_wanted", 10),
             hours_old=q["hours_old"],
-            linkedin_fetch_description=q.get("fetch_description", False),
+            fetch_description=q.get("fetch_description", False),
         )
     except Exception as e:  # any scraper failure: report and exit, Java decides what to do
         print(f"jobspy error: {type(e).__name__}: {e}", file=sys.stderr)

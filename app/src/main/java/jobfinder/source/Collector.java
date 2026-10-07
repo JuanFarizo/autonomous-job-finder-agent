@@ -25,12 +25,16 @@ public class Collector {
         this.metrics = metrics;
     }
 
-    /** Remote-in-Argentina search plus Argentina search. Remote-worldwide search is not defined yet (needs a live test). */
+    /**
+     * Search 1 adds the word remote/remoto to the query. Search 2 is the plain query for jobs based in Argentina.
+     * The LinkedIn remote filter (is_remote) and the contract filter (job_type) are NOT sent: in live tests they had no
+     * effect (same results with and without; contract returned fulltime rows). Remote is expressed by wording instead.
+     */
     public static List<SearchQuery> buildQueries(AppConfig c, int resultsWanted, boolean fetchDescription, String jobType) {
         int hours = c.maxAgeDays() * 24;
         List<SearchQuery> out = new ArrayList<>();
         for (String role : c.targetRoles()) {
-            out.add(new SearchQuery(role, "Argentina", true, jobType, resultsWanted, hours, fetchDescription));
+            out.add(new SearchQuery(role + " AND (remote OR remoto)", "Argentina", false, jobType, resultsWanted, hours, fetchDescription));
             if (Boolean.TRUE.equals(c.location().acceptOnsiteInResidence())) {
                 out.add(new SearchQuery(role, "Argentina", false, jobType, resultsWanted, hours, fetchDescription));
             }

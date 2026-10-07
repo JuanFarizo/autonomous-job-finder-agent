@@ -33,8 +33,10 @@ class CollectTest {
         var cfg = JsonFiles.loadConfig(Path.of("../config/config.json"));
         var qs = Collector.buildQueries(cfg, 10, false, null);
         assertEquals(2, qs.size());
-        assertTrue(qs.get(0).remote());
-        assertFalse(qs.get(1).remote());
+        assertTrue(qs.get(0).searchTerm().endsWith("AND (remote OR remoto)"));
+        assertFalse(qs.get(1).searchTerm().contains("remote"));
+        assertFalse(qs.get(0).remote());
+        assertNull(qs.get(0).jobType());
         assertEquals(168, qs.get(0).hoursOld());
     }
 

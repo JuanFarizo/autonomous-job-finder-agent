@@ -98,4 +98,12 @@ class ScoreTest {
         var out = Ranker.rank(List.of(a, b, c, d, e), 3.5);
         assertEquals(List.of("c", "b", "a", "e"), out.stream().map(j -> j.job().id()).toList());
     }
+
+    @Test
+    void promptIncludesOwnerPreferencesWhenPresent() {
+        var p = new Profile("Ana", "Java dev", "s", List.of(), List.of(), List.of(), null, List.of("Prefers fully remote work"));
+        String prompt = PromptBuilder.userPrompt(job("1", LocalDate.of(2026, 10, 5), "d"), p);
+        org.junit.jupiter.api.Assertions.assertTrue(prompt.contains("Prefers fully remote work"));
+        org.junit.jupiter.api.Assertions.assertFalse(PromptBuilder.userPrompt(job("1", LocalDate.of(2026, 10, 5), "d"), PROFILE).contains("job preferences"));
+    }
 }

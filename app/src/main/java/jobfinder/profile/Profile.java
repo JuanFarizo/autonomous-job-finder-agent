@@ -10,7 +10,14 @@ public record Profile(
         List<Skill> skills,
         List<Experience> experience,
         List<ProofPoint> proofPoints,
-        List<String> contact) {
+        List<String> contact,
+        List<String> preferences) {
+
+    /** Convenience for callers without stated job preferences. */
+    public Profile(String name, String headline, String summary, List<Skill> skills, List<Experience> experience,
+                   List<ProofPoint> proofPoints, List<String> contact) {
+        this(name, headline, summary, skills, experience, proofPoints, contact, List.of());
+    }
 
     public record Skill(String name, String level, Integer years, List<String> proofPointIds) {}
 

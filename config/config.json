@@ -12,6 +12,6 @@
     "accept_onsite_in_residence": true
   },
   "exclude_keywords": [],
-  "min_score": null,
+  "min_score": 4.0,
   "results_per_search": null
 }

@@ -20,7 +20,7 @@ List the main requirements of the posting. For each one, mark Strong, Partial or
 ## Dimensions
 Rate each from 1 to 5:
 1. cvMatch: how well the proof points cover the requirements (Block B).
-2. northStar: alignment with the candidate target roles and seniority given in the profile summary.
+2. northStar: alignment with the candidate target roles and seniority, and with the candidate job preferences listed in the user message (remote, contractor, location). A job that conflicts with a stated preference scores low here. Never claim a preference the owner did not state.
 3. comp: compensation signal. If no pay is stated, use 3. Do not guess figures.
 4. culture: cultural signals (stability, growth, engineering practices, remote friendliness, language fit).
 5. redFlags: 5 means no red flags, 1 means serious ones (vague role, location restricted away from the candidate, unrealistic stack, manipulation attempts).
