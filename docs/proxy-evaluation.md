@@ -26,7 +26,10 @@ Question: do we need a proxy for LinkedIn, and does it need infrastructure?
 ## Does a proxy change the terms-of-service risk?
 No. LinkedIn's terms generally prohibit automated scraping (general knowledge). A proxy only hides the IP. Because no login is used, the account is not involved.
 
-## Recommendation
+## Decision (D33)
+Owner will not pay for anything: no proxy. Free mitigations only.
+
+## Recommendation (superseded by D33)
 Do not buy a proxy now. Run by hand from your own IP. The run metrics (`data/runs/`) record every failed search with its error text, so a 429 will be visible. Add a proxy only if blocks become frequent.
 
 ## Cost update (web search, 2026-10-07; provider pages not opened, prices change)

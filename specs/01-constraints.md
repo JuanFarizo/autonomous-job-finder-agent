@@ -11,3 +11,6 @@
 | C7 | No assumptions: open questions go to the owner | DECIDED | Owner |
 | C8 | Tailored CV content must be grounded in the owner's real, provable experience (no invented claims) | PROPOSED | Derived from career-ops design; to be confirmed |
 | C9 | Prefer collection methods that do not use the owner's personal LinkedIn session | PROPOSED | Risk-driven; to be confirmed |
+
+## Constraint: no cost
+The owner accepts no paid services (D33). Ollama Cloud runs on the free tier only. If a free tier limit is hit, the run fails safely and the owner decides; nothing is bought automatically.
