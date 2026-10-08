@@ -16,6 +16,11 @@ public final class ShortlistReport {
     private ShortlistReport() {}
 
     public static String render(List<ScoredJob> jobs, LocalDate date) {
+        return render(jobs, date, java.util.Set.of());
+    }
+
+    /** cvFiles holds the file names (like linkedin_li-123.pdf) that were written under data/cv/. */
+    public static String render(List<ScoredJob> jobs, LocalDate date, java.util.Set<String> cvFiles) {
         StringBuilder sb = new StringBuilder();
         sb.append("# Job shortlist ").append(date).append("\n\n");
         sb.append("Jobs: ").append(jobs.size()).append("\n\n");
@@ -27,15 +32,21 @@ public final class ShortlistReport {
             sb.append("- Reason: ").append(esc(s.reason())).append("\n");
             sb.append("- Location: ").append(esc(j.location())).append("\n");
             sb.append("- Posted: ").append(j.datePosted() == null ? "unknown" : j.datePosted().toString()).append("\n");
-            sb.append("- URL: ").append(url(j.url())).append("\n\n");
+            sb.append("- URL: ").append(url(j.url())).append("\n");
+            String cv = j.source() + "_" + j.id() + ".pdf";
+            sb.append("- CV: ").append(cvFiles.contains(cv) ? "cv/" + cv : "not generated").append("\n\n");
         }
         return sb.toString();
     }
 
     public static void write(Path path, List<ScoredJob> jobs, LocalDate date) throws IOException {
+        write(path, jobs, date, java.util.Set.of());
+    }
+
+    public static void write(Path path, List<ScoredJob> jobs, LocalDate date, java.util.Set<String> cvFiles) throws IOException {
         Path parent = path.toAbsolutePath().getParent();
         if (parent != null) Files.createDirectories(parent);
-        Files.writeString(path, render(jobs, date));
+        Files.writeString(path, render(jobs, date, cvFiles));
     }
 
     private static String url(String u) {

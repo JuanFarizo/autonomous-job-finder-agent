@@ -27,7 +27,29 @@ public final class CvPdf {
                 .replace("{{summary}}", esc(cv.summary()))
                 .replace("{{highlights}}", highlights(cv.highlights()))
                 .replace("{{skills}}", esc(String.join(", ", cv.skills())))
-                .replace("{{experience}}", experience(cv.experience()));
+                .replace("{{experience}}", experience(cv.experience()))
+                .replace("{{education}}", education(profile.education()))
+                .replace("{{languages}}", languages(profile.languages()));
+    }
+
+    /** Education and languages come straight from the profile, so they are grounded by construction. */
+    private static String education(List<Profile.Education> es) {
+        if (es == null || es.isEmpty()) return "";
+        var sb = new StringBuilder("<h2>Education</h2>");
+        for (var e : es) {
+            sb.append("<div class=\"job\"><table class=\"jobhead\"><tr>")
+              .append("<td class=\"role\">").append(esc(e.title())).append("</td>");
+            if (e.from() != null) sb.append("<td class=\"dates\">").append(esc(e.from())).append(" – ").append(e.to() == null ? "present" : esc(e.to())).append("</td>");
+            sb.append("</tr></table><p class=\"company\">").append(esc(e.institution())).append("</p></div>");
+        }
+        return sb.toString();
+    }
+
+    private static String languages(List<Profile.Language> ls) {
+        if (ls == null || ls.isEmpty()) return "";
+        var parts = new java.util.ArrayList<String>();
+        for (var l : ls) parts.add(esc(l.name()) + " (" + esc(l.level()) + ")");
+        return "<h2>Languages</h2><p class=\"skills\">" + String.join(" &#183; ", parts) + "</p>";
     }
 
     /** Verifies grounding first, then writes the PDF. Throws if any text is not in the profile. */

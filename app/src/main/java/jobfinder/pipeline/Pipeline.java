@@ -33,7 +33,6 @@ public class Pipeline {
 
     private static final Logger LOG = LoggerFactory.getLogger(Pipeline.class);
     static final int DEFAULT_RESULTS_PER_SEARCH = 10;
-    static final int TOP_CVS = 5;
 
     public record Result(Path shortlist, List<ScoredJob> shown, int cvCount, Path metricsFile) {}
 
@@ -80,20 +79,21 @@ public class Pipeline {
         for (ScoredJob s : ranked) tracker.record(s, today);
 
         List<ScoredJob> toShow = seen.filterUnseen(ranked);
-        int cvs = 0;
-        for (ScoredJob s : toShow.stream().limit(TOP_CVS).toList()) {
+        java.util.Set<String> cvFiles = new java.util.HashSet<>();
+        for (ScoredJob s : toShow) {
+            String name = s.job().source() + "_" + s.job().id() + ".pdf";
             try {
-                CvPdf.write(Tailorer.tailor(s.job(), profile), profile,
-                        dataDir.resolve("cv").resolve(s.job().source() + "_" + s.job().id() + ".pdf"));
-                cvs++;
+                CvPdf.write(Tailorer.tailor(s.job(), profile), profile, dataDir.resolve("cv").resolve(name));
+                cvFiles.add(name);
             } catch (IOException | IllegalStateException e) {
                 LOG.warn("CV not written for {}:{}: {}", s.job().source(), s.job().id(), e.getMessage());
             }
         }
-        metrics.addStage("cv-pdfs", Math.min(TOP_CVS, toShow.size()), cvs);
+        int cvs = cvFiles.size();
+        metrics.addStage("cv-pdfs", toShow.size(), cvs);
 
         Path report = dataDir.resolve("shortlist_" + today + ".md");
-        ShortlistReport.write(report, toShow, today);
+        ShortlistReport.write(report, toShow, today, cvFiles);
         seen.markShown(toShow);
         return new Result(report, toShow, cvs, metrics.write(dataDir.resolve("runs")));
     }

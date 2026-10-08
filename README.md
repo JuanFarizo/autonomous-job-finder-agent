@@ -7,8 +7,8 @@ The agent finds jobs, ranks them against your real profile and prepares a tailor
 1. Complete the one-time setup in "How to test it, and what you must provide" below.
 2. Run `./scripts/run.sh`. A run takes about a minute and makes two LinkedIn searches and one model call per job.
 3. Open `data/shortlist_<date>.md`. Each entry has a score from 1 to 5, a short reason, the location, the posting date and the LinkedIn URL.
-4. Open the matching PDF in `data/cv/`. The file name is `linkedin_li-<id>.pdf`, where `<id>` is the number at the end of the job URL. Only the top 5 new jobs of each run get a PDF.
-5. Apply on LinkedIn yourself.
+4. Open the CV for that job. Each shortlist entry has a `CV:` line with the file in `data/cv/` (`linkedin_li-<id>.pdf`, where `<id>` is the number at the end of the job URL). Every job on the shortlist gets its own tailored PDF.
+5. Apply by hand. The `URL:` line is the LinkedIn posting. Open it, read the description, and use the Apply button on that page (it opens Easy Apply or the company's own site). The agent does not store the company's application link, because LinkedIn does not give it to the scraper.
 6. Run it again whenever you want. Jobs already shown are not shown again. To start from zero, delete `data/tracker.json` and `data/seen_jobs.json`.
 
 To change what it looks for, edit `config/config.json` (search wording, seniority, languages, location rules, `min_score`). To change how jobs are judged, edit `private/profile.json` (your skills, proof points and job preferences).
@@ -62,21 +62,21 @@ config/config.json + private/profile.json
    [Ranker]  keeps jobs with score >= min_score, sorted by score, then freshness
               |
               v
-   [Tracker + Tailorer]  records the job; for the top 5 new jobs reorders your real skills,
+   [Tracker + Tailorer]  records the job; for every shortlisted job reorders your real skills,
               |   proof points and bullets by overlap with the job text; renders HTML to PDF
               v
    data/shortlist_<date>.md, data/cv/*.pdf, data/runs/run_*.json
 ```
 
 ### Components and external dependencies
-| Part | What it does | Dependency | Cost |
-|---|---|---|---|
-| Orchestrator | Pipeline, filters, ranking, tracking, output | Java 25, Spring Boot 4.0.8, Maven 3.9.10 (pinned in `.sdkmanrc`) | Free |
-| Collector sidecar | Scrapes LinkedIn job postings | JobSpy 1.2.0 (MIT) in a Python 3.12 venv, called as a subprocess | Free |
-| Scorer | Judges the fit between a job and your profile | Spring AI 2.0.1 with Ollama Cloud (`https://ollama.com`), free-tier model set in `OLLAMA_MODEL` | Free tier |
-| Scoring rubric | Dimensions and score bands | Trimmed port of the career-ops rubric (MIT, attribution in `app/src/main/resources/prompts/`) | Free |
-| PDF CV | Renders the tailored CV | openhtmltopdf 1.1.93 (LGPL-2.1+) and the HTML template `cv-template.html` | Free |
-| Storage | Seen jobs, tracker, raw results, metrics | Plain JSON files in `data/` (gitignored) | Free |
+| Part | What it does | Dependency |
+|---|---|---|
+| Orchestrator | Pipeline, filters, ranking, tracking, output | Java 25, Spring Boot 4.0.8, Maven 3.9.10 (pinned in `.sdkmanrc`) |
+| Collector sidecar | Scrapes LinkedIn job postings | JobSpy 1.2.0 (MIT) in a Python 3.12 venv, called as a subprocess |
+| Scorer | Judges the fit between a job and your profile | Spring AI 2.0.1 with Ollama Cloud (`https://ollama.com`), free-tier model set in `OLLAMA_MODEL` |
+| Scoring rubric | Dimensions and score bands | Trimmed port of the career-ops rubric (MIT, attribution in `app/src/main/resources/prompts/`) |
+| PDF CV | Renders the tailored CV | openhtmltopdf 1.1.93 (LGPL-2.1+) and the HTML template `cv-template.html` |
+| Storage | Seen jobs, tracker, raw results, metrics | Plain JSON files in `data/` (gitignored) | 
 
 ### Design rules
 - **Discovery only.** There is no code that submits an application.

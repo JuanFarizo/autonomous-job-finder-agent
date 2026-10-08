@@ -37,6 +37,13 @@ public final class JsonFiles {
                 if (!ids.contains(id)) throw new IllegalStateException("Skill " + s.name() + " cites unknown proof point " + id);
             }
         }
+        if (profile.education() != null) for (Profile.Education e : profile.education()) requireSource("Education " + e.institution(), e.source());
+        if (profile.languages() != null) for (Profile.Language l : profile.languages()) requireSource("Language " + l.name(), l.source());
         return profile;
+    }
+
+    private static void requireSource(String what, String source) {
+        if (source == null || !(source.equals("cv") || source.startsWith("owner-stated:")))
+            throw new IllegalStateException(what + " has ungrounded source: " + source);
     }
 }

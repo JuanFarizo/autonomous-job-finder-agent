@@ -65,6 +65,20 @@ class TailorTest {
     }
 
     @Test
+    void educationAndLanguagesAreRenderedFromProfile() throws Exception {
+        var profile = new Profile(PROFILE.name(), PROFILE.headline(), PROFILE.summary(), PROFILE.skills(), PROFILE.experience(),
+                PROFILE.proofPoints(), PROFILE.contact(), List.of(),
+                List.of(new Profile.Education("Test University", "Systems Analyst", "2018", "2021", "owner-stated:2026-10-08")),
+                List.of(new Profile.Language("English", "Professional working", "cv")));
+        Path pdf = CvPdf.write(Tailorer.tailor(job("Java"), profile), profile, Files.createTempDirectory("cv").resolve("edu.pdf"));
+        try (var doc = Loader.loadPDF(pdf.toFile())) {
+            String text = new PDFTextStripper().getText(doc);
+            assertTrue(text.contains("Systems Analyst") && text.contains("Test University") && text.contains("2018"));
+            assertTrue(text.contains("English (Professional working)"));
+        }
+    }
+
+    @Test
     void writesRealPdfWithEscapedTextAndRefusesUngroundedCv() throws Exception {
         var cv = Tailorer.tailor(job("Java OAuth"), PROFILE);
         Path pdf = CvPdf.write(cv, PROFILE, Files.createTempDirectory("cv").resolve("out.pdf"));
