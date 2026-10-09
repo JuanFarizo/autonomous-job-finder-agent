@@ -13,7 +13,16 @@ public record Profile(
         List<String> contact,
         List<String> preferences,
         List<Education> education,
-        List<Language> languages) {
+        List<Language> languages,
+        List<Experience> projects,
+        List<String> aiPractices) {
+
+    /** Convenience for callers without projects or AI practices. */
+    public Profile(String name, String headline, String summary, List<Skill> skills, List<Experience> experience,
+                   List<ProofPoint> proofPoints, List<String> contact, List<String> preferences,
+                   List<Education> education, List<Language> languages) {
+        this(name, headline, summary, skills, experience, proofPoints, contact, preferences, education, languages, List.of(), List.of());
+    }
 
     /** Convenience for callers without education or languages. */
     public Profile(String name, String headline, String summary, List<Skill> skills, List<Experience> experience,

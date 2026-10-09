@@ -69,10 +69,13 @@ class TailorTest {
         var profile = new Profile(PROFILE.name(), PROFILE.headline(), PROFILE.summary(), PROFILE.skills(), PROFILE.experience(),
                 PROFILE.proofPoints(), PROFILE.contact(), List.of(),
                 List.of(new Profile.Education("Test University", "Systems Analyst", "2018", "2021", "owner-stated:2026-10-08")),
-                List.of(new Profile.Language("English", "Professional working", "cv")));
+                List.of(new Profile.Language("English", "Professional working", "cv")),
+                List.of(new Profile.Experience("Side Project", "Creator", "2026-02", null, List.of("Built it alone"))),
+                List.of("Uses AI coding assistants"));
         Path pdf = CvPdf.write(Tailorer.tailor(job("Java"), profile), profile, Files.createTempDirectory("cv").resolve("edu.pdf"));
         try (var doc = Loader.loadPDF(pdf.toFile())) {
             String text = new PDFTextStripper().getText(doc);
+            assertTrue(text.contains("Side Project") && text.contains("Built it alone") && text.contains("Uses AI coding assistants"));
             assertTrue(text.contains("Systems Analyst") && text.contains("Test University") && text.contains("2018"));
             assertTrue(text.contains("English (Professional working)"));
         }

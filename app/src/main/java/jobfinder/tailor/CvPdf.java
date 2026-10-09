@@ -28,8 +28,23 @@ public final class CvPdf {
                 .replace("{{highlights}}", highlights(cv.highlights()))
                 .replace("{{skills}}", esc(String.join(", ", cv.skills())))
                 .replace("{{experience}}", experience(cv.experience()))
+                .replace("{{projects}}", projects(profile.projects()))
+                .replace("{{ai}}", aiPractices(profile.aiPractices()))
                 .replace("{{education}}", education(profile.education()))
                 .replace("{{languages}}", languages(profile.languages()));
+    }
+
+    /** Projects and AI practices come straight from the owner's profile, like education. */
+    private static String projects(List<Profile.Experience> ps) {
+        if (ps == null || ps.isEmpty()) return "";
+        return "<h2>Projects</h2>" + experience(ps);
+    }
+
+    private static String aiPractices(List<String> items) {
+        if (items == null || items.isEmpty()) return "";
+        var sb = new StringBuilder("<h2>AI-assisted development</h2><ul>");
+        for (String i : items) sb.append("<li>").append(esc(i)).append("</li>");
+        return sb.append("</ul>").toString();
     }
 
     /** Education and languages come straight from the profile, so they are grounded by construction. */
