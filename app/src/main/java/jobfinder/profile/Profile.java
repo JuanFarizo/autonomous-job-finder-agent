@@ -47,5 +47,15 @@ public record Profile(
     public record Language(String name, String level, String source) {}
 
     /** source is "cv" or "owner-stated:YYYY-MM-DD". Anything else is rejected by the loader. */
-    public record ProofPoint(String id, String claim, String source, boolean confirmed) {}
+    public record ProofPoint(String id, String claim, String source, boolean confirmed, Boolean showOnCv) {
+
+        public ProofPoint(String id, String claim, String source, boolean confirmed) {
+            this(id, claim, source, confirmed, null);
+        }
+
+        /** False keeps the claim for scoring but out of the CV highlights. Absent means shown. */
+        public boolean shownOnCv() {
+            return showOnCv == null || showOnCv;
+        }
+    }
 }

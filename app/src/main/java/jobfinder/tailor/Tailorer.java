@@ -13,11 +13,14 @@ import jobfinder.source.Job;
 
 /**
  * Deterministic tailoring: orders the owner's real skills, proof points and experience bullets by word overlap with
- * the job text. It never rewrites or invents text. Highlights hold the top proof points with an overlap.
+ * the job text, and keeps the most relevant bullets of each role. It never rewrites or invents text. Highlights hold
+ * the top proof points with an overlap.
  */
 public final class Tailorer {
 
-    static final int MAX_HIGHLIGHTS = 5;
+    static final int MAX_HIGHLIGHTS = 3;
+    /** The profile holds every real bullet; each CV keeps only the most relevant ones so it stays at two pages. */
+    static final int MAX_BULLETS_PER_ROLE = 5;
     private static final Pattern WORDS = Pattern.compile("[\\p{L}\\p{N}+#.]{2,}");
 
     private Tailorer() {}
@@ -30,6 +33,7 @@ public final class Tailorer {
                 .map(Profile.Skill::name).toList();
 
         List<Profile.ProofPoint> highlights = profile.proofPoints().stream()
+                .filter(Profile.ProofPoint::shownOnCv)
                 .filter(p -> overlap(jobWords, p.claim()) > 0)
                 .sorted(Comparator.comparingInt((Profile.ProofPoint p) -> overlap(jobWords, p.claim())).reversed())
                 .limit(MAX_HIGHLIGHTS).toList();
@@ -37,7 +41,8 @@ public final class Tailorer {
         List<Profile.Experience> experience = new ArrayList<>();
         for (Profile.Experience e : profile.experience()) {
             List<String> bullets = e.bullets().stream()
-                    .sorted(Comparator.comparingInt((String b) -> overlap(jobWords, b)).reversed()).toList();
+                    .sorted(Comparator.comparingInt((String b) -> overlap(jobWords, b)).reversed())
+                    .limit(MAX_BULLETS_PER_ROLE).toList();
             experience.add(new Profile.Experience(e.company(), e.role(), e.from(), e.to(), bullets));
         }
         return new TailoredCv(job, profile.headline(), profile.summary(), skills, highlights, experience);
