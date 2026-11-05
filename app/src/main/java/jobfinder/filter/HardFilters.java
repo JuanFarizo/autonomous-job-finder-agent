@@ -44,6 +44,10 @@ import java.util.regex.Pattern;
  *     unless config.seniority lists the word.</li>
  * <li><b>Exclude keywords</b>: case-insensitive, whole-word (not preceded/followed by a letter or digit),
  *     searched in title and description.</li>
+ * <li><b>Portuguese required</b>: unless config.languages lists "pt", a sentence in title/description that mentions
+ *     Portuguese with requirement wording (required, fluent, native, advanced, must, speaking, C1/C2...) is rejected
+ *     as "language-required:pt". Optional wording (plus, nice to have, deseable...) keeps the job with a
+ *     "portuguese-optional" warning.</li>
  * <li><b>Language</b>: stopword counts over the description for en, es, pt, fr, de, it. Rejected only when
  *     the description has at least 30 words, the strongest non-allowed language has at least 8 hits and at
  *     least 3 times the best allowed language's hits. Otherwise kept.</li>
@@ -116,6 +120,8 @@ public final class HardFilters {
         r = seniority(job, cfg, w);
         if (r != null) return r;
         r = excluded(job, cfg);
+        if (r != null) return r;
+        r = portuguese(job, cfg, w);
         if (r != null) return r;
         return language(job, cfg);
     }
@@ -234,6 +240,24 @@ public final class HardFilters {
                 "eine", "bei", "oder", "unser", "unsere"));
         STOPWORDS.put("it", Set.of("della", "sono", "nostra", "nostro", "anche", "che", "gli", "una", "per", "squadra",
                 "azienda", "lavoro"));
+    }
+
+    private static final Pattern PT_MENTION = Pattern.compile("portugu(?:es|ese)");
+    private static final Pattern PT_OPTIONAL = Pattern.compile(
+            "plus|nice to have|bonus|deseable|valorable|ventaja|preferible|not required|no excluyente|optional|opcional");
+    private static final Pattern PT_REQUIRED = Pattern.compile(
+            "required|requerid|se requiere|fluent|fluen|native|nativo|advanced|avanzad|mandatory|obligatori|"
+            + "excluyente|must|speaking|hablante|bilingue|dominio|(?<![a-z0-9])c[12](?![a-z0-9])");
+
+    /** Portuguese required in title/description, judged sentence by sentence; optional wording wins in a sentence. */
+    private static String portuguese(Job j, AppConfig cfg, List<String> w) {
+        if (cfg.languages() != null && cfg.languages().stream().anyMatch(l -> "pt".equalsIgnoreCase(l))) return null;
+        for (String sentence : (lower(j.title()) + " | " + lower(j.description())).split("[.;!?\\n|]")) {
+            if (!PT_MENTION.matcher(sentence).find()) continue;
+            if (PT_OPTIONAL.matcher(sentence).find()) w.add("portuguese-optional");
+            else if (PT_REQUIRED.matcher(sentence).find()) return "language-required:pt";
+        }
+        return null;
     }
 
     private static String language(Job j, AppConfig cfg) {

@@ -211,6 +211,39 @@ class HardFiltersTest {
         assertEquals(2, run(cfg(), job("A", "Argentina", false, TODAY, null), job("B", "Argentina", false, TODAY, "Ein Job")).kept().size());
     }
 
+    static AppConfig cfgLangs(List<String> langs) {
+        return new AppConfig(7, List.of("linkedin"), List.of(), List.of("semi-senior", "senior"), langs,
+                new AppConfig.LocationRules("AR", true, true, true, true), List.of(), null, null);
+    }
+
+    @Test void portugueseRequiredEnglishRejected() {
+        assertEquals("language-required:pt", reason(run(cfg(),
+                job("Java Dev", "Argentina", true, TODAY, "Fluent in Portuguese is required."))));
+    }
+
+    @Test void portugueseRequiredSpanishRejected() {
+        assertEquals("language-required:pt", reason(run(cfg(),
+                job("Java Dev", "Argentina", true, TODAY, "Se requiere portugués avanzado."))));
+    }
+
+    @Test void portugueseInTitleRejected() {
+        assertEquals("language-required:pt", reason(run(cfg(),
+                job("Java Developer (Portuguese speaking)", "Argentina", true, TODAY, "Backend role."))));
+    }
+
+    @Test void portugueseNiceToHaveKeptWithWarning() {
+        FilterResult r = run(cfg(),
+                job("Java Dev", "Argentina", true, TODAY, "Portuguese is a plus."),
+                job("Java Dev B", "Argentina", true, TODAY, "Portugués deseable."));
+        assertEquals(2, r.kept().size());
+        assertTrue(r.warnings().get(0).startsWith("portuguese-optional"));
+    }
+
+    @Test void portugueseAllowedWhenConfigured() {
+        assertEquals(1, run(cfgLangs(List.of("es", "en", "pt")),
+                job("Java Dev", "Argentina", true, TODAY, "Fluent in Portuguese is required.")).kept().size());
+    }
+
     @Test void inputNotMutatedAndMixedListIsClean() {
         List<Job> in = new java.util.ArrayList<>(List.of(
                 ok("Senior Java Developer", "Argentina", false),
