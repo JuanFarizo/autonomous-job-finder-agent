@@ -54,6 +54,15 @@ class PipelineTest {
     }
 
     @Test
+    void sourceReturningGarbageDoesNotAbortRun() throws Exception {
+        var config = JsonFiles.loadConfig(Path.of("../config/config.json"));
+        var result = new Pipeline(config, PROFILE, List.of(fake("glassdoor", "<html>not json"), fake("linkedin", RAW)),
+                (s, u) -> new ModelAnswer(ANSWER, 800, 60), Files.createTempDirectory("data"), new RunMetrics())
+                .run(LocalDate.of(2026, 10, 6));
+        assertEquals(1, result.shown().size());
+    }
+
+    @Test
     void allSourcesFailingThrows() throws Exception {
         var config = JsonFiles.loadConfig(Path.of("../config/config.json"));
         var p = new Pipeline(config, PROFILE, List.of(fake("glassdoor", null), fake("indeed", null)),

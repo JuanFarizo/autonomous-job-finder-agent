@@ -163,7 +163,8 @@ public final class HardFilters {
         String titleLoc = lower(j.title()) + " | " + loc;
         String all = String.join(" | ", nz(j.title()), nz(j.location()), nz(j.description()));
         boolean inArg = !loc.isEmpty() && ARGENTINA.matcher(loc).find();
-        boolean hybrid = HYBRID.matcher(titleLoc).find();
+        boolean hybrid = HYBRID.matcher(titleLoc).find()
+                || (HYBRID.matcher(lower(j.description())).find() && !FULL_REMOTE.matcher(lower(j.description())).find());
         boolean remote = !hybrid && (Boolean.TRUE.equals(j.remoteHint()) || REMOTE.matcher(titleLoc).find()
                 || FULL_REMOTE.matcher(lower(j.description())).find());
 
@@ -259,15 +260,16 @@ public final class HardFilters {
 
     private static final Pattern PT_MENTION = Pattern.compile("portugu(?:es|ese)");
     private static final Pattern PT_OPTIONAL = Pattern.compile(
-            "plus|nice to have|bonus|deseable|valorable|ventaja|preferible|not required|no excluyente|optional|opcional");
+            "(?<![a-z])plus(?![a-z])|nice to have|would be nice|bonus|deseable|valorable|ventaja|preferible|not required|no excluyente|optional|opcional");
     private static final Pattern PT_REQUIRED = Pattern.compile(
-            "required|requerid|se requiere|fluent|fluen|native|nativo|advanced|avanzad|mandatory|obligatori|"
-            + "excluyente|must|speaking|hablante|bilingue|dominio|(?<![a-z0-9])c[12](?![a-z0-9])");
+            "required|requerid|se requiere|fluent|fluen|fluido|intermedi|(?<![a-z])native|nativo|advanced|avanzad|mandatory|obligatori|"
+            + "excluyente|must|portugu(?:es|ese)[ -]speaking(?:\\s+(?:candidate|developer|engineer|professional)|\\W*$)|"
+            + "hablante|bilingue|dominio|(?<![a-z0-9])c[12](?![a-z0-9])");
 
     /** Portuguese required in title/description, judged sentence by sentence; optional wording wins in a sentence. */
     private static String portuguese(Job j, AppConfig cfg, List<String> w) {
         if (cfg.languages() != null && cfg.languages().stream().anyMatch(l -> "pt".equalsIgnoreCase(l))) return null;
-        for (String sentence : (lower(j.title()) + " | " + lower(j.description())).split("[.;!?\\n|]")) {
+        for (String sentence : (lower(j.title()) + " | " + lower(j.description())).split("[.;!?,\\n|]")) {
             if (!PT_MENTION.matcher(sentence).find()) continue;
             if (PT_OPTIONAL.matcher(sentence).find()) w.add("portuguese-optional");
             else if (PT_REQUIRED.matcher(sentence).find()) return "language-required:pt";

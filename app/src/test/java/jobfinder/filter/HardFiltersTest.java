@@ -216,6 +216,24 @@ class HardFiltersTest {
                 new AppConfig.LocationRules("AR", true, true, true, true, List.of("Rosario")), List.of(), null, null, null);
     }
 
+    @Test void hybridInDescriptionWithRemoteHintRejectedOutsideRosario() {
+        assertEquals("onsite-outside-home-area", reason(run(cfgRosario(), job("Java Developer", "Buenos Aires, Argentina", true, TODAY,
+                "Hybrid model: 3 days office, 2 days remote"))));
+    }
+
+    @Test void portugueseSpeakingMarketsKept() {
+        assertEquals(1, run(cfg(), job("Java Dev", "Argentina", true, TODAY, "We serve Portuguese-speaking markets across LATAM.")).kept().size());
+    }
+
+    @Test void portugueseWouldBeNiceInMixedSentenceKept() {
+        assertEquals(1, run(cfg(), job("Java Dev", "Argentina", true, TODAY, "Fluent English required, Portuguese would be nice.")).kept().size());
+    }
+
+    @Test void portugueseFluidoAndListedRequirementRejected() {
+        assertEquals("language-required:pt", reason(run(cfg(), job("Java Dev", "Argentina", true, TODAY, "Portugués fluido."))));
+        assertEquals("language-required:pt", reason(run(cfg(), job("Java Dev", "Argentina", true, TODAY, "Requisitos: inglés y portugués intermedio."))));
+    }
+
     @Test void indeedDesdeCasaCountsAsRemote() {
         assertEquals(1, run(cfgRosario(), ok("Senior Java Developer", "Desde casa, AR", false)).kept().size());
     }

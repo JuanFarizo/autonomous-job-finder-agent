@@ -65,10 +65,10 @@ public class Collector {
                 List<Job> jobs = JobMapper.toJobs(source.name(), raw);
                 all.addAll(jobs);
                 metrics.addSearch(stat(q, jobs, ms(t0), null));
-            } catch (IOException e) {
+            } catch (IOException | RuntimeException e) { // RuntimeException: unparsable source output (Jackson, date)
                 failures++;
-                last = e;
-                metrics.addSearch(stat(q, List.of(), ms(t0), e.getMessage()));
+                last = e instanceof IOException io ? io : new IOException("unparsable source output: " + e.getMessage(), e);
+                metrics.addSearch(stat(q, List.of(), ms(t0), last.getMessage()));
             }
         }
         if (!queries.isEmpty() && failures == queries.size()) throw last;
