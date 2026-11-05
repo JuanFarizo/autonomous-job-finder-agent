@@ -16,7 +16,7 @@ class HardFiltersTest {
 
     static AppConfig cfg(List<String> exclude, Boolean onsite) {
         return new AppConfig(7, List.of("linkedin"), List.of(), List.of("semi-senior", "senior"), List.of("es", "en"),
-                new AppConfig.LocationRules("AR", true, true, true, onsite), exclude, null, null);
+                new AppConfig.LocationRules("AR", true, true, true, onsite, null), exclude, null, null);
     }
 
     static AppConfig cfg() { return cfg(List.of(), true); }
@@ -211,9 +211,39 @@ class HardFiltersTest {
         assertEquals(2, run(cfg(), job("A", "Argentina", false, TODAY, null), job("B", "Argentina", false, TODAY, "Ein Job")).kept().size());
     }
 
+    static AppConfig cfgRosario() {
+        return new AppConfig(7, List.of("linkedin"), List.of(), List.of("semi-senior", "senior"), List.of("es", "en"),
+                new AppConfig.LocationRules("AR", true, true, true, true, List.of("Rosario")), List.of(), null, null);
+    }
+
+    @Test void hybridBuenosAiresRejected() {
+        assertEquals("onsite-outside-home-area", reason(run(cfgRosario(), ok("Java Dev (Hybrid)", "Buenos Aires, Argentina", false))));
+    }
+
+    @Test void onsiteCabaRejected() {
+        assertEquals("onsite-outside-home-area",
+                reason(run(cfgRosario(), ok("Java Dev", "Capital Federal, Buenos Aires, Argentina", false))));
+    }
+
+    @Test void hybridRosarioKept() {
+        assertEquals(1, run(cfgRosario(), ok("Java Dev (Hybrid)", "Rosario, Santa Fe, Argentina", false)).kept().size());
+    }
+
+    @Test void remoteBuenosAiresKept() {
+        assertEquals(1, run(cfgRosario(), ok("Java Dev", "Buenos Aires, Argentina", true)).kept().size());
+    }
+
+    @Test void hybridWordWinsOverRemoteHint() {
+        assertEquals("onsite-outside-home-area", reason(run(cfgRosario(), ok("Java Dev - Hybrid", "Buenos Aires, Argentina", true))));
+    }
+
+    @Test void fullyRemoteDescriptionKept() {
+        assertEquals(1, run(cfgRosario(), job("Java Dev", "Buenos Aires, Argentina", false, TODAY, "This is a 100% remote position.")).kept().size());
+    }
+
     static AppConfig cfgLangs(List<String> langs) {
         return new AppConfig(7, List.of("linkedin"), List.of(), List.of("semi-senior", "senior"), langs,
-                new AppConfig.LocationRules("AR", true, true, true, true), List.of(), null, null);
+                new AppConfig.LocationRules("AR", true, true, true, true, null), List.of(), null, null);
     }
 
     @Test void portugueseRequiredEnglishRejected() {

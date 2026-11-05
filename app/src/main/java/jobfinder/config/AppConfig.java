@@ -24,5 +24,6 @@ public record AppConfig(
             boolean acceptRemoteWorldwide,
             boolean acceptRemoteInResidence,
             boolean rejectRemoteRestrictedToOtherRegions,
-            Boolean acceptOnsiteInResidence) {}
+            Boolean acceptOnsiteInResidence,
+            List<String> onsiteCities) {}
 }

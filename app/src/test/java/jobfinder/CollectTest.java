@@ -35,6 +35,7 @@ class CollectTest {
         assertEquals(2, qs.size());
         assertTrue(qs.get(0).searchTerm().endsWith("AND (remote OR remoto)"));
         assertFalse(qs.get(1).searchTerm().contains("remote"));
+        assertEquals("Rosario, Argentina", qs.get(1).location());
         assertFalse(qs.get(0).remote());
         assertNull(qs.get(0).jobType());
         assertEquals(168, qs.get(0).hoursOld());

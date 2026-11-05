@@ -36,7 +36,11 @@ public class Collector {
         for (String role : c.targetRoles()) {
             out.add(new SearchQuery(role + " AND (remote OR remoto)", "Argentina", false, jobType, resultsWanted, hours, fetchDescription));
             if (Boolean.TRUE.equals(c.location().acceptOnsiteInResidence())) {
-                out.add(new SearchQuery(role, "Argentina", false, jobType, resultsWanted, hours, fetchDescription));
+                var cities = c.location().onsiteCities();
+                for (String city : cities == null || cities.isEmpty() ? List.of("Argentina") : cities) {
+                    String loc = city.equals("Argentina") ? city : city + ", Argentina";
+                    out.add(new SearchQuery(role, loc, false, jobType, resultsWanted, hours, fetchDescription));
+                }
             }
         }
         return out;

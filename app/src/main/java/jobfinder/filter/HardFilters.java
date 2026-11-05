@@ -77,6 +77,11 @@ public final class HardFilters {
     private static final Pattern REMOTE = Pattern.compile(
             "(?<![a-z])(remote|remoto|remota|teletrabajo|home\\s*office|work\\s+from\\s+home|wfh)(?![a-z])");
 
+    private static final Pattern HYBRID = Pattern.compile(
+            "(?<![a-z])(hybrid|hibrido|hibrida|semipresencial)(?![a-z])");
+    private static final Pattern FULL_REMOTE = Pattern.compile(
+            "100\\s*%\\s*(remote|remoto)|fully\\s+remote|full\\s+remote|totalmente\\s+remot[oa]");
+
     private static final Pattern JUNIOR = Pattern.compile(
             "(?<![a-z0-9])(junior|jr|trainee|intern|internship|entry[\\s-]+level)(?![a-z0-9])");
     private static final Pattern SENIOR = Pattern.compile(
@@ -158,7 +163,9 @@ public final class HardFilters {
         String titleLoc = lower(j.title()) + " | " + loc;
         String all = String.join(" | ", nz(j.title()), nz(j.location()), nz(j.description()));
         boolean inArg = !loc.isEmpty() && ARGENTINA.matcher(loc).find();
-        boolean remote = Boolean.TRUE.equals(j.remoteHint()) || REMOTE.matcher(titleLoc).find();
+        boolean hybrid = HYBRID.matcher(titleLoc).find();
+        boolean remote = !hybrid && (Boolean.TRUE.equals(j.remoteHint()) || REMOTE.matcher(titleLoc).find()
+                || FULL_REMOTE.matcher(lower(j.description())).find());
 
         Matcher m = RESTRICTION.matcher(all);
         if (m.find() && (rules == null || rules.rejectRemoteRestrictedToOtherRegions())) {
@@ -170,6 +177,10 @@ public final class HardFilters {
         }
         if (inArg) {
             if (remote) return null;
+            List<String> cities = rules == null ? null : rules.onsiteCities();
+            if (cities != null && !cities.isEmpty() && cities.stream().noneMatch(c -> hasWord(loc, lower(c)))) {
+                return "onsite-outside-home-area";
+            }
             Boolean onsite = rules == null ? null : rules.acceptOnsiteInResidence();
             if (Boolean.FALSE.equals(onsite)) return "onsite-not-accepted";
             if (onsite == null) w.add("onsite-undecided");
@@ -186,6 +197,10 @@ public final class HardFilters {
         if (Boolean.FALSE.equals(j.remoteHint())) return "onsite-outside-argentina";
         w.add("location-ambiguous (not in Argentina, remote status unknown)");
         return null;
+    }
+
+    private static boolean hasWord(String text, String word) {
+        return Pattern.compile("(?<![a-z0-9])" + Pattern.quote(word.strip()) + "(?![a-z0-9])").matcher(text).find();
     }
 
     private static String nz(String s) { return s == null ? "" : s; }
