@@ -104,6 +104,8 @@ class PipelineTest {
         // second run: same postings are already tracked, nothing is scored or shown again
         var again = new Pipeline(config, PROFILE, List.of(source), (s, u) -> { throw new AssertionError("model must not be called"); }, data, new RunMetrics()).run(today);
         assertEquals(0, again.shown().size());
+        // a same-day rerun with nothing new must not wipe the shortlist written by the first run
+        assertTrue(Files.readString(result.shortlist()).contains("Senior Java Developer"));
     }
 
     @Test

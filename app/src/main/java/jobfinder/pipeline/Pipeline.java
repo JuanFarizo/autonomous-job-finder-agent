@@ -107,7 +107,8 @@ public class Pipeline {
         metrics.addStage("cv-pdfs", toShow.size(), cvs);
 
         Path report = dataDir.resolve("shortlist_" + today + ".md");
-        ShortlistReport.write(report, toShow, today, cvFiles);
+        // nothing new: keep the shortlist an earlier run wrote today instead of overwriting it with "Jobs: 0"
+        if (!toShow.isEmpty() || !java.nio.file.Files.exists(report)) ShortlistReport.write(report, toShow, today, cvFiles);
         seen.markShown(toShow);
         return new Result(report, toShow, cvs, metrics.write(dataDir.resolve("runs")));
     }
