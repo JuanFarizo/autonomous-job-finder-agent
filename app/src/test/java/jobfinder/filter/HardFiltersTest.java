@@ -234,6 +234,12 @@ class HardFiltersTest {
         assertEquals("language-required:pt", reason(run(cfg(), job("Java Dev", "Argentina", true, TODAY, "Requisitos: inglés y portugués intermedio."))));
     }
 
+    @Test void countryOnlyLocationKeptWithWarning() {
+        FilterResult r = run(cfgRosario(), ok("Senior Java Developer", "Argentina", false));
+        assertEquals(1, r.kept().size());
+        assertTrue(r.warnings().get(0).startsWith("location-ambiguous"));
+    }
+
     @Test void indeedDesdeCasaCountsAsRemote() {
         assertEquals(1, run(cfgRosario(), ok("Senior Java Developer", "Desde casa, AR", false)).kept().size());
     }

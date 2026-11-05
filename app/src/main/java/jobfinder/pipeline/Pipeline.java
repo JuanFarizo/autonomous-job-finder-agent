@@ -75,6 +75,8 @@ public class Pipeline {
 
         var filtered = HardFilters.apply(collected, config, today);
         metrics.addStage("hard-filters", collected.size(), filtered.kept().size());
+        filtered.rejected().forEach(r -> LOG.info("filter rejected {}: {}/{} \"{}\" at {}", r.reason(), r.job().source(),
+                r.job().id(), r.job().title(), r.job().location()));
         filtered.warnings().forEach(w -> LOG.info("filter warning: {}", w));
 
         var tracker = new Tracker(dataDir);

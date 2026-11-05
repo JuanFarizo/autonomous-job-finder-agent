@@ -180,6 +180,10 @@ public final class HardFilters {
             if (remote) return null;
             List<String> cities = rules == null ? null : rules.onsiteCities();
             if (cities != null && !cities.isEmpty() && cities.stream().noneMatch(c -> hasWord(loc, lower(c)))) {
+                if (loc.replaceAll("argentina|[^a-z]", "").isEmpty()) { // country only: LinkedIn gives no city for many remote jobs
+                    w.add("location-ambiguous (country only, no city, remote status unknown)");
+                    return null;
+                }
                 return "onsite-outside-home-area";
             }
             Boolean onsite = rules == null ? null : rules.acceptOnsiteInResidence();
