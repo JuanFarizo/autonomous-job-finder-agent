@@ -16,7 +16,7 @@ class HardFiltersTest {
 
     static AppConfig cfg(List<String> exclude, Boolean onsite) {
         return new AppConfig(7, List.of("linkedin"), List.of(), List.of("semi-senior", "senior"), List.of("es", "en"),
-                new AppConfig.LocationRules("AR", true, true, true, onsite, null), exclude, null, null);
+                new AppConfig.LocationRules("AR", true, true, true, onsite, null), exclude, null, null, null);
     }
 
     static AppConfig cfg() { return cfg(List.of(), true); }
@@ -213,7 +213,11 @@ class HardFiltersTest {
 
     static AppConfig cfgRosario() {
         return new AppConfig(7, List.of("linkedin"), List.of(), List.of("semi-senior", "senior"), List.of("es", "en"),
-                new AppConfig.LocationRules("AR", true, true, true, true, List.of("Rosario")), List.of(), null, null);
+                new AppConfig.LocationRules("AR", true, true, true, true, List.of("Rosario")), List.of(), null, null, null);
+    }
+
+    @Test void indeedDesdeCasaCountsAsRemote() {
+        assertEquals(1, run(cfgRosario(), ok("Senior Java Developer", "Desde casa, AR", false)).kept().size());
     }
 
     @Test void hybridBuenosAiresRejected() {
@@ -243,7 +247,7 @@ class HardFiltersTest {
 
     static AppConfig cfgLangs(List<String> langs) {
         return new AppConfig(7, List.of("linkedin"), List.of(), List.of("semi-senior", "senior"), langs,
-                new AppConfig.LocationRules("AR", true, true, true, true, null), List.of(), null, null);
+                new AppConfig.LocationRules("AR", true, true, true, true, null), List.of(), null, null, null);
     }
 
     @Test void portugueseRequiredEnglishRejected() {

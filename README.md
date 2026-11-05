@@ -5,7 +5,7 @@ Subject: An intelligent, automated software application designed to streamline t
 The agent finds jobs, ranks them against your real profile and prepares a tailored CV for the best ones. You review the results and apply by hand. It never applies to anything.
 
 1. Complete the one-time setup in "How to test it, and what you must provide" below.
-2. Run `./scripts/run.sh`. A run takes about a minute and makes two LinkedIn searches and one model call per job.
+2. Run `./scripts/run.sh`. A run takes about a minute and makes searches on LinkedIn, Indeed and Glassdoor and one model call per job.
 3. Open `data/shortlist_<date>.md`. Each entry has a score from 1 to 5, a short reason, the location, the posting date and the LinkedIn URL.
 4. Open the CV for that job. Each shortlist entry has a `CV:` line with the file in `data/cv/` (`linkedin_li-<id>.pdf`, where `<id>` is the number at the end of the job URL). Every job on the shortlist gets its own tailored PDF.
 5. Apply by hand. The `URL:` line is the LinkedIn posting. Open it, read the description, and use the Apply button on that page (it opens Easy Apply or the company's own site). The agent does not store the company's application link, because LinkedIn does not give it to the scraper.
@@ -84,6 +84,6 @@ config/config.json + private/profile.json
 - **Grounding.** Every proof point has a source (`cv` or `owner-stated:<date>`). The scorer rejects any evidence id that is not in your profile, and the tailorer only reorders text that already exists in it. Nothing is invented.
 - **Raw data first.** Search results are saved in `data/raw/` before any processing.
 - **Private data stays local.** `private/` and `data/` are gitignored. Keys come from environment variables or `private/.env`.
-- **One interface per source.** LinkedIn is the only source today. Others can be added behind the same `JobSource` interface.
+- **One interface per source.** LinkedIn, Indeed and Glassdoor run through JobSpy (`config.sources`). Others can be added behind the same `JobSource` interface.
 
 The full decisions and their reasons are in `specs/` (start with `specs/README.md` and `specs/02-decisions-log.md`).

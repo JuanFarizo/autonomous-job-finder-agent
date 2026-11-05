@@ -34,6 +34,42 @@ class PipelineTest {
 
     static final String ANSWER = "{\"score\":4.5,\"dimensions\":{\"cvMatch\":5,\"northStar\":4,\"comp\":4,\"culture\":4,\"redFlags\":5},\"reason\":\"Good Java fit\",\"evidence\":[\"pp1\"]}";
 
+    static JobSource fake(String name, String raw) {
+        return new JobSource() {
+            public String name() { return name; }
+            public String fetchRaw(SearchQuery q) throws IOException {
+                if (raw == null) throw new IOException(name + " blocked");
+                return raw;
+            }
+        };
+    }
+
+    @Test
+    void oneSourceFailingDoesNotAbortRun() throws Exception {
+        var config = JsonFiles.loadConfig(Path.of("../config/config.json"));
+        var result = new Pipeline(config, PROFILE, List.of(fake("glassdoor", null), fake("linkedin", RAW)),
+                (s, u) -> new ModelAnswer(ANSWER, 800, 60), Files.createTempDirectory("data"), new RunMetrics())
+                .run(LocalDate.of(2026, 10, 6));
+        assertEquals(1, result.shown().size());
+    }
+
+    @Test
+    void allSourcesFailingThrows() throws Exception {
+        var config = JsonFiles.loadConfig(Path.of("../config/config.json"));
+        var p = new Pipeline(config, PROFILE, List.of(fake("glassdoor", null), fake("indeed", null)),
+                (s, u) -> new ModelAnswer(ANSWER, 800, 60), Files.createTempDirectory("data"), new RunMetrics());
+        assertThrows(IOException.class, () -> p.run(LocalDate.of(2026, 10, 6)));
+    }
+
+    @Test
+    void crossSourceDuplicateKeptOnce() throws Exception {
+        var config = JsonFiles.loadConfig(Path.of("../config/config.json"));
+        var result = new Pipeline(config, PROFILE, List.of(fake("linkedin", RAW), fake("indeed", RAW.replace("x.test", "y.test"))),
+                (s, u) -> new ModelAnswer(ANSWER, 800, 60), Files.createTempDirectory("data"), new RunMetrics())
+                .run(LocalDate.of(2026, 10, 6));
+        assertEquals(1, result.shown().size());
+    }
+
     @Test
     void endToEndWithFakesFiltersScoresTailorsAndNeverRepeatsAJob() throws Exception {
         var config = JsonFiles.loadConfig(Path.of("../config/config.json"));
@@ -46,7 +82,7 @@ class PipelineTest {
         var today = LocalDate.of(2026, 10, 6);
 
         var metrics = new RunMetrics();
-        var result = new Pipeline(config, PROFILE, source, (s, u) -> new ModelAnswer(ANSWER, 800, 60), data, metrics).run(today);
+        var result = new Pipeline(config, PROFILE, List.of(source), (s, u) -> new ModelAnswer(ANSWER, 800, 60), data, metrics).run(today);
 
         assertEquals(2, calls.size());                 // remote + Argentina searches
         assertEquals(1, result.shown().size());        // junior and stale rejected, duplicate across searches removed
@@ -57,7 +93,7 @@ class PipelineTest {
         assertTrue(Files.readString(result.metricsFile()).contains("\"input_tokens\" : 800"));
 
         // second run: same postings are already tracked, nothing is scored or shown again
-        var again = new Pipeline(config, PROFILE, source, (s, u) -> { throw new AssertionError("model must not be called"); }, data, new RunMetrics()).run(today);
+        var again = new Pipeline(config, PROFILE, List.of(source), (s, u) -> { throw new AssertionError("model must not be called"); }, data, new RunMetrics()).run(today);
         assertEquals(0, again.shown().size());
     }
 

@@ -8,7 +8,8 @@ import jobfinder.config.JsonFiles;
 import jobfinder.llm.OllamaScoreModel;
 import jobfinder.obs.RunMetrics;
 import jobfinder.pipeline.Pipeline;
-import jobfinder.source.JobSpyLinkedInSource;
+import jobfinder.source.JobSource;
+import jobfinder.source.JobSpySource;
 import jobfinder.source.RetryingSource;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,10 +43,11 @@ public class JobFinderApp {
             if (model.isBlank())
                 throw new IllegalStateException("Set OLLAMA_MODEL (model not chosen yet, D16)");
 
-            var source = RetryingSource.withRealSleep(
-                    new JobSpyLinkedInSource(List.of("../sidecar/.venv/bin/python", "../sidecar/run_jobspy.py")), 2,
-                    5_000);
-            var result = new Pipeline(config, profile, source, new OllamaScoreModel(chat), Path.of("../data"),
+            List<JobSource> sources = config.sources().stream()
+                    .<JobSource>map(site -> RetryingSource.withRealSleep(new JobSpySource(site,
+                            List.of("../sidecar/.venv/bin/python", "../sidecar/run_jobspy.py")), 2, 5_000))
+                    .toList();
+            var result = new Pipeline(config, profile, sources, new OllamaScoreModel(chat), Path.of("../data"),
                     new RunMetrics())
                     .run(LocalDate.now());
             System.out.printf("Shortlist: %s (%d jobs), %d CV PDFs, metrics: %s%n",

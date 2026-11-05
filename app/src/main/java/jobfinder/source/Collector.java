@@ -30,11 +30,14 @@ public class Collector {
      * The LinkedIn remote filter (is_remote) and the contract filter (job_type) are NOT sent: in live tests they had no
      * effect (same results with and without; contract returned fulltime rows). Remote is expressed by wording instead.
      */
-    public static List<SearchQuery> buildQueries(AppConfig c, int resultsWanted, boolean fetchDescription, String jobType) {
+    public static List<SearchQuery> buildQueries(AppConfig c, String source, int resultsWanted, boolean fetchDescription, String jobType) {
         int hours = c.maxAgeDays() * 24;
+        boolean boolSyntax = source.equals("linkedin");
+        List<String> roles = boolSyntax || c.simpleTerms() == null || c.simpleTerms().isEmpty() ? c.targetRoles() : c.simpleTerms();
         List<SearchQuery> out = new ArrayList<>();
-        for (String role : c.targetRoles()) {
-            out.add(new SearchQuery(role + " AND (remote OR remoto)", "Argentina", false, jobType, resultsWanted, hours, fetchDescription));
+        for (String role : roles) {
+            String remoteTerm = boolSyntax ? role + " AND (remote OR remoto)" : role; // live test: adding "remote" cut Indeed/Glassdoor to 1 row
+            out.add(new SearchQuery(remoteTerm, "Argentina", false, jobType, resultsWanted, hours, fetchDescription));
             if (Boolean.TRUE.equals(c.location().acceptOnsiteInResidence())) {
                 var cities = c.location().onsiteCities();
                 for (String city : cities == null || cities.isEmpty() ? List.of("Argentina") : cities) {

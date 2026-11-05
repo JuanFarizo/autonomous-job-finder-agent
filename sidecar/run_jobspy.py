@@ -10,7 +10,8 @@ def main() -> int:
     q = json.load(sys.stdin)
     try:
         df = scrape_jobs(
-            site_name=["linkedin"],
+            site_name=[q.get("site", "linkedin")],
+            country_indeed=q.get("country", "Argentina"),  # used by indeed and glassdoor only
             search_term=q["search_term"],
             location=q.get("location"),
             is_remote=q.get("is_remote", False),

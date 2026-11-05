@@ -31,7 +31,7 @@ class CollectTest {
     @Test
     void buildsRemoteAndArgentinaQueriesWithOwnFreshnessWindow() throws Exception {
         var cfg = JsonFiles.loadConfig(Path.of("../config/config.json"));
-        var qs = Collector.buildQueries(cfg, 10, false, null);
+        var qs = Collector.buildQueries(cfg, "linkedin", 10, false, null);
         assertEquals(2, qs.size());
         assertTrue(qs.get(0).searchTerm().endsWith("AND (remote OR remoto)"));
         assertFalse(qs.get(1).searchTerm().contains("remote"));
@@ -39,6 +39,17 @@ class CollectTest {
         assertFalse(qs.get(0).remote());
         assertNull(qs.get(0).jobType());
         assertEquals(168, qs.get(0).hoursOld());
+    }
+
+    @Test
+    void nonLinkedinSourcesUseSimpleTerms() throws Exception {
+        var cfg = JsonFiles.loadConfig(Path.of("../config/config.json"));
+        var qs = Collector.buildQueries(cfg, "indeed", 10, false, null);
+        assertEquals(2, qs.size());
+        assertEquals("Java backend developer", qs.get(0).searchTerm());
+        assertEquals("Argentina", qs.get(0).location());
+        assertEquals("Java backend developer", qs.get(1).searchTerm());
+        assertEquals("Rosario, Argentina", qs.get(1).location());
     }
 
     @Test
@@ -55,7 +66,7 @@ class CollectTest {
 
     @Test
     void sidecarFailureSurfacesAsException() {
-        var src = new JobSpyLinkedInSource(List.of("sh", "-c", "echo boom >&2; exit 2"));
+        var src = new JobSpySource("linkedin", List.of("sh", "-c", "echo boom >&2; exit 2"));
         var e = assertThrows(java.io.IOException.class, () -> src.fetchRaw(new SearchQuery("x", null, false, null, 1, 24, false)));
         assertTrue(e.getMessage().contains("boom"));
     }

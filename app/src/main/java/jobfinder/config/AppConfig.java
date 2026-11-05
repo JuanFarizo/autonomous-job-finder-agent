@@ -12,7 +12,8 @@ public record AppConfig(
         LocationRules location,
         List<String> excludeKeywords,
         Double minScore,
-        Integer resultsPerSearch) {
+        Integer resultsPerSearch,
+        List<String> simpleTerms) {
 
     /**
      * Accepted: located in Argentina, or remote open to Argentina, or remote from anywhere.

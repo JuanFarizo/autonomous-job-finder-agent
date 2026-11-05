@@ -8,25 +8,28 @@ import java.util.Map;
 
 import tools.jackson.databind.json.JsonMapper;
 
-/** LinkedIn through the JobSpy Python sidecar, launched as a subprocess (Q4 decision: subprocess, JSON in/out). */
-public class JobSpyLinkedInSource implements JobSource {
+/** One JobSpy site (linkedin, indeed, glassdoor) through the JobSpy Python sidecar, launched as a subprocess (Q4 decision: subprocess, JSON in/out). */
+public class JobSpySource implements JobSource {
 
     private static final JsonMapper MAPPER = JsonMapper.builder().build();
 
+    private final String site;
     private final List<String> command;
 
-    public JobSpyLinkedInSource(List<String> command) {
+    public JobSpySource(String site, List<String> command) {
+        this.site = site;
         this.command = command;
     }
 
     @Override
     public String name() {
-        return "linkedin";
+        return site;
     }
 
     @Override
     public String fetchRaw(SearchQuery q) throws IOException, InterruptedException {
         Map<String, Object> in = new LinkedHashMap<>();
+        in.put("site", site);
         in.put("search_term", q.searchTerm());
         in.put("location", q.location());
         in.put("is_remote", q.remote());

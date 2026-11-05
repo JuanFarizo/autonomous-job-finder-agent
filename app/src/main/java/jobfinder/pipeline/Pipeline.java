@@ -38,15 +38,15 @@ public class Pipeline {
 
     private final AppConfig config;
     private final Profile profile;
-    private final JobSource source;
+    private final List<JobSource> sources;
     private final ScoreModel model;
     private final Path dataDir;
     private final RunMetrics metrics;
 
-    public Pipeline(AppConfig config, Profile profile, JobSource source, ScoreModel model, Path dataDir, RunMetrics metrics) {
+    public Pipeline(AppConfig config, Profile profile, List<JobSource> sources, ScoreModel model, Path dataDir, RunMetrics metrics) {
         this.config = config;
         this.profile = profile;
-        this.source = source;
+        this.sources = sources;
         this.model = model;
         this.dataDir = dataDir;
         this.metrics = metrics;
@@ -57,8 +57,20 @@ public class Pipeline {
         double minScore = config.minScore() == null ? Ranker.DEFAULT_MIN_SCORE : config.minScore();
         if (config.minScore() == null) LOG.warn("min_score not set by owner, using placeholder {}", minScore);
 
-        var collector = new Collector(source, new RawStore(dataDir.resolve("raw")), metrics);
-        List<Job> collected = collector.collect(Collector.buildQueries(config, perSearch, true, null));
+        List<Job> collected = new java.util.ArrayList<>();
+        IOException lastFailure = null;
+        int failed = 0;
+        for (JobSource source : sources) {
+            try {
+                var collector = new Collector(source, new RawStore(dataDir.resolve("raw")), metrics);
+                collected.addAll(collector.collect(Collector.buildQueries(config, source.name(), perSearch, true, null)));
+            } catch (IOException e) {
+                failed++;
+                lastFailure = e;
+                LOG.warn("source {} failed entirely: {}", source.name(), e.getMessage());
+            }
+        }
+        if (!sources.isEmpty() && failed == sources.size()) throw lastFailure;
         metrics.addStage("collected", collected.size(), collected.size());
 
         var filtered = HardFilters.apply(collected, config, today);

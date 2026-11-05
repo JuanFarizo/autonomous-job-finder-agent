@@ -75,7 +75,7 @@ public final class HardFilters {
     private static final Pattern ARGENTINA = Pattern.compile(
             "argentina|buenos aires|(?<![a-z])caba(?![a-z])|cordoba|rosario|mendoza|,\\s*ar\\s*$|^ar$|,\\s*ar\\s*,");
     private static final Pattern REMOTE = Pattern.compile(
-            "(?<![a-z])(remote|remoto|remota|teletrabajo|home\\s*office|work\\s+from\\s+home|wfh)(?![a-z])");
+            "(?<![a-z])(remote|remoto|remota|teletrabajo|home\\s*office|work\\s+from\\s+home|wfh|desde\\s+casa)(?![a-z])");
 
     private static final Pattern HYBRID = Pattern.compile(
             "(?<![a-z])(hybrid|hibrido|hibrida|semipresencial)(?![a-z])");

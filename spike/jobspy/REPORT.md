@@ -12,3 +12,9 @@ Earlier notes above were wrong or misleading:
 - Remote: `is_remote=True` DOES send LinkedIn's `f_WT=2` (remote) filter (linkedin/__init__.py line 94). The `is_remote` column is only a text heuristic on title/location (`is_job_remote`), so False in the output does not mean the filter failed. Whether the 15 results are truly remote is unverified.
 - job_type and job_level are parsed only from each job's detail page, which JobSpy fetches only when `linkedin_fetch_description=True`. Empty values were caused by my run settings, not a bug.
 - Contract filter exists: `job_type="contract"` sends `f_JT=C` (linkedin/util.py). Untested live.
+
+## Indeed and Glassdoor (2026-11-05, own IP, no proxy, country_indeed=Argentina, fetch_description=True)
+- Term "Java developer", location Argentina, 15 wanted: Indeed 15 rows, Glassdoor 15 rows, no block. Descriptions filled.
+- Adding "remote" to the term cut both to 1 row, so non-LinkedIn searches use the plain term.
+- Indeed marks remote jobs with location "Desde casa, AR" (is_remote False); HardFilters treats "desde casa" as remote. Glassdoor gives location None and is_remote True for remote jobs.
+- Both boards repeat the same EPAM postings as LinkedIn; the existing title+company+location dedup handles overlap only when the location text matches.
