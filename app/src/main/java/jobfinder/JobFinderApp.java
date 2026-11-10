@@ -38,6 +38,17 @@ public class JobFinderApp {
                     config.seniority(), config.maxAgeDays());
             System.out.printf("Profile: %s, %d skills, %d proof points%n", profile.name(), profile.skills().size(),
                     profile.proofPoints().size());
+            if (args.containsOption("tailor")) { // ./scripts/tailor.sh job.txt: grounded CV for one pasted posting
+                Path f = Path.of(args.getOptionValues("tailor").get(0));
+                String text = java.nio.file.Files.readString(f);
+                String stem = f.getFileName().toString().replaceAll("\\.[^.]*$", "");
+                var job = new jobfinder.source.Job("manual", stem, null, text.lines().findFirst().orElse(""), "", "", null,
+                        null, null, null, text);
+                Path out = Path.of("../data/cv/manual_" + stem + ".pdf");
+                jobfinder.tailor.CvPdf.write(jobfinder.tailor.Tailorer.tailor(job, profile), profile, out);
+                System.out.println("CV: " + out.toAbsolutePath().normalize());
+                return;
+            }
             if (!args.containsOption("run") && !args.getNonOptionArgs().contains("run"))
                 return;
             if (model.isBlank())
