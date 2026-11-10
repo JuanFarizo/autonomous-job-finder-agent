@@ -9,4 +9,4 @@ if [ -f private/.env ]; then set -a; source private/.env; set +a; fi
 for v in OLLAMA_API_KEY OLLAMA_MODEL; do
   [ -z "${(P)v}" ] && { echo "Missing $v. Export it, or put '$v=...' in private/.env"; exit 1; }
 done
-cd app && F="$(cd .. && realpath "$1")" && set -- "$F" && mvn -q spring-boot:run -Dspring-boot.run.arguments=--tailor="$1"
+cd app && F="$(cd .. && realpath "$1")" && set -- "$F" "${2:+$(cd .. && realpath "$2")}" && mvn -q spring-boot:run -Dspring-boot.run.arguments="--tailor=$1 ${2:+--profile=$2}"

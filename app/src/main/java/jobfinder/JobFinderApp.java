@@ -39,6 +39,8 @@ public class JobFinderApp {
             System.out.printf("Profile: %s, %d skills, %d proof points%n", profile.name(), profile.skills().size(),
                     profile.proofPoints().size());
             if (args.containsOption("tailor")) { // ./scripts/tailor.sh job.txt: grounded CV for one pasted posting
+                if (args.containsOption("profile")) // hand-curated profile for this one posting (wording approved by the owner)
+                    profile = JsonFiles.loadProfile(Path.of(args.getOptionValues("profile").get(0)));
                 Path f = Path.of(args.getOptionValues("tailor").get(0));
                 String text = java.nio.file.Files.readString(f);
                 String stem = f.getFileName().toString().replaceAll("\\.[^.]*$", "");
