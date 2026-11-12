@@ -1,3 +1,5 @@
+> HISTORICAL (2026-10-06). Ollama Cloud and its free tier no longer apply; the app now uses local Ollama (decision D38). Kept as a record of the original spike.
+
 # Spike: Spring Boot 4 + Spring AI 2.x structured output (T4, Phase 0)
 
 Date: 2026-10-06. Status: COMPILES, context wiring OK, LIVE CALLS NOT RUN (ANTHROPIC_API_KEY and OLLAMA_API_KEY not present in env).

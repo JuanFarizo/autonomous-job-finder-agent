@@ -4,7 +4,7 @@
 |---|---|---|
 | Q1 | ANSWERED yes (D6). Portability check stays in Phase 0 | closed |
 | Q2 | ANSWERED: Spring Boot 4 + Spring AI 2.x (D15), validate in Phase 0 | closed |
-| Q3 | PARTIAL (D14, D16): Ollama Cloud free tier. Exact model chosen after Phase 0 test; no USD budget needed on free tier | Phase 0 |
+| Q3 | ANSWERED (D38): local Ollama, `gemma4:e4b`; no USD budget needed | Phase 0 |
 | Q4 | ANSWERED: subprocess (D25) | closed |
 | Q5 | PARTIAL (D13): role and remote/contractor known. Exact terms, locations, seniority, languages from LinkedIn profile | Phase 1 |
 | Q6 | ANSWERED: no proxy, no paid services (D33) | closed |

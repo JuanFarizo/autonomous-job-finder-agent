@@ -19,7 +19,7 @@ Run it by hand. There is no scheduler.
 ./scripts/run.sh                                            # works from any terminal: loads sdkman Java/Maven and the keys
 cd app && mvn test                                          # unit tests, no network, no keys needed
 ```
-Exported variables exist only in the terminal where you typed them. Put them once in `private/.env` (gitignored) so `scripts/run.sh` always finds them. Use plain `KEY=value` lines, without `export`:
+Copy `.env.example` to `private/.env` to start. Exported variables exist only in the terminal where you typed them. Put them once in `private/.env` (gitignored) so `scripts/run.sh` always finds them. Use plain `KEY=value` lines, without `export`:
 ```
 OLLAMA_MODEL=gemma4:e4b
 ```

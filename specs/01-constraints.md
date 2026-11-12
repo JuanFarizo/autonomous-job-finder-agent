@@ -13,4 +13,4 @@
 | C9 | Prefer collection methods that do not use the owner's personal LinkedIn session | PROPOSED | Risk-driven; to be confirmed |
 
 ## Constraint: no cost
-The owner accepts no paid services (D33). Ollama Cloud runs on the free tier only. If a free tier limit is hit, the run fails safely and the owner decides; nothing is bought automatically.
+The owner accepts no paid services (D33). The LLM runs locally through Ollama (D38), so there is no per-call cost and no API key. If Ollama is not running or the model is not pulled, the run fails safely with a clear message.
