@@ -60,7 +60,7 @@ public class JobFinderApp {
                     .<JobSource>map(site -> RetryingSource.withRealSleep(new JobSpySource(site,
                             List.of("../sidecar/.venv/bin/python", "../sidecar/run_jobspy.py")), 2, 5_000))
                     .toList();
-            var result = new Pipeline(config, profile, sources, new OllamaScoreModel(chat), Path.of("../data"),
+            var result = new Pipeline(config, profile, sources, new OllamaScoreModel(chat, model), Path.of("../data"),
                     new RunMetrics())
                     .run(LocalDate.now());
             System.out.printf("Shortlist: %s (%d jobs), %d CV PDFs, metrics: %s%n",

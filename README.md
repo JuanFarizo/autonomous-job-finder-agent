@@ -21,8 +21,7 @@ cd app && mvn test                                          # unit tests, no net
 ```
 Exported variables exist only in the terminal where you typed them. Put them once in `private/.env` (gitignored) so `scripts/run.sh` always finds them. Use plain `KEY=value` lines, without `export`:
 ```
-OLLAMA_API_KEY=...
-OLLAMA_MODEL=gemma4:31b
+OLLAMA_MODEL=gemma4:e4b
 ```
 Output goes to `data/` (gitignored): `shortlist_<date>.md`, `cv/*.pdf`, `raw/`, `runs/run_*.json` (searches, LinkedIn result quality, funnel, token usage).
 
@@ -31,8 +30,8 @@ Output goes to `data/` (gitignored): `shortlist_<date>.md`, `cv/*.pdf`, `raw/`, 
 2. **Sidecar (once):** `cd sidecar && python -m venv .venv && .venv/bin/pip install -r requirements.txt`.
 3. **Your profile (you provide):** `private/profile.json`, gitignored. It holds your real skills, experience and proof points. Every proof point needs a source (`cv` or `owner-stated:<date>`), or loading fails. The CV PDF (`private/cv.pdf`) is only the source to build it from.
 4. **Ollama (you provide):**
-   - `export OLLAMA_API_KEY=...` (create it at ollama.com/settings/keys).
-   - `export OLLAMA_MODEL=...` (a free-tier cloud model name from ollama.com/search?c=cloud). The run stops with a clear message if it is missing.
+   - Install and run Ollama locally (`ollama serve`, default `http://localhost:11434`; override with `OLLAMA_BASE_URL`).
+   - `ollama pull gemma4:e4b`, then `export OLLAMA_MODEL=gemma4:e4b` (9.4 GB; tested on a 16 GB M1 Pro, about 2.5 min for 9 jobs). `gemma4:12b` (13 GB loaded) hangs on 16 GB. The run stops with a clear message if it is missing.
 5. **Config (already set):** `config/config.json` has seniority, languages, location rules and the search query. `min_score` is empty, so a placeholder of 3.5 is used and logged until you choose a value.
 6. **LinkedIn:** no account, login or key is needed. It runs from your own IP with no proxy (see `docs/proxy-evaluation.md`).
 7. **Check:** after a run, open `data/shortlist_<date>.md`, the PDFs in `data/cv/`, and `data/runs/run_*.json` for failed searches and token totals.
@@ -56,7 +55,7 @@ config/config.json + private/profile.json
    [Skip tracked]  jobs already in data/tracker.json are dropped
               |
               v
-   [Scorer]  one call per job to Ollama Cloud (Spring AI); structured answer with a score,
+   [Scorer]  one call per job to local Ollama (Spring AI); structured answer with a score,
               |   a reason and evidence ids; the answer is rejected if an id is not in your profile
               v
    [Ranker]  keeps jobs with score >= min_score, sorted by score, then freshness
@@ -73,7 +72,7 @@ config/config.json + private/profile.json
 |---|---|---|
 | Orchestrator | Pipeline, filters, ranking, tracking, output | Java 25, Spring Boot 4.0.8, Maven 3.9.10 (pinned in `.sdkmanrc`) |
 | Collector sidecar | Scrapes LinkedIn job postings | JobSpy 1.2.0 (MIT) in a Python 3.12 venv, called as a subprocess |
-| Scorer | Judges the fit between a job and your profile | Spring AI 2.0.1 with Ollama Cloud (`https://ollama.com`), free-tier model set in `OLLAMA_MODEL` |
+| Scorer | Judges the fit between a job and your profile | Spring AI 2.0.1 with local Ollama (`http://localhost:11434`), model set in `OLLAMA_MODEL` |
 | Scoring rubric | Dimensions and score bands | Trimmed port of the career-ops rubric (MIT, attribution in `app/src/main/resources/prompts/`) |
 | PDF CV | Renders the tailored CV | openhtmltopdf 1.1.93 (LGPL-2.1+) and the HTML template `cv-template.html` |
 | Storage | Seen jobs, tracker, raw results, metrics | Plain JSON files in `data/` (gitignored) | 
